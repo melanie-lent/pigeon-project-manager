@@ -1,7 +1,7 @@
-package com.example.pigeonbackend.datatypes;
+package com.example.pigeonbackend.datatypes.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
 import java.sql.Timestamp;
 
@@ -10,7 +10,8 @@ import java.sql.Timestamp;
 @Table(name="user")
 public class User {
     @Id
-    private long id;
+    private Long id;
+
     private String hash;
     private String email;
 
