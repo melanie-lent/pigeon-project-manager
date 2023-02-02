@@ -77,17 +77,17 @@ local.properties
 
 # Logs
 # ----
-/*.log
+*.log
 
 # Others
 # ----
-**/*.class
-**/*.bin
-**/*.build
-**/*.out
+*.class
+*.bin
+*.build
+*.out
 build
 build/
-**/*.jar
+*.jar
 
 # Maven specific
 
@@ -97,11 +97,9 @@ target/
 .svn/
 .svn/entries
 .svn*
-*/.svn/*
+*.svn/*
 
 #Skip all CVS related
-CVS/
-/CVS/*
-**/CVS/*
+*CVS/*
 .cvsignore
-*/.cvsignore
+*.cvsignore
