@@ -12,13 +12,20 @@
 	<artifactId>pigeon-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>pigeon-backend</name>
-	<description>pigeon backend. lets do this shit</description>
+	<description>pigeon backend. lets do this</description>
 	<properties>
+<!--		<maven.compiler.source>1.8</maven.compiler.source>-->
+<!--		<maven.compiler.target>1.8</maven.compiler.target>-->
 		<java.version>17</java.version>
 		<spring-shell.version>3.0.0</spring-shell.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core-jakarta</artifactId>
+			<version>5.6.9.Final</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -94,7 +101,31 @@
 			<artifactId>postgresql</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-core</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>6.0.4</version>
+        </dependency>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
