@@ -1,15 +1,18 @@
 package com.example.pigeonbackend.service;
 
 import com.example.pigeonbackend.datatypes.model.Task;
+import com.example.pigeonbackend.datatypes.model.User;
 import com.example.pigeonbackend.repo.ProjectRepo;
 import com.example.pigeonbackend.repo.TaskRepo;
+import com.example.pigeonbackend.repo.UserRepo;
 import com.example.pigeonbackend.repo.TaskSpecifications;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TaskService {
@@ -18,12 +21,14 @@ public class TaskService {
     @Autowired
     private ProjectRepo projectRepo;
     @Autowired
+    private UserRepo userRepo;
+    @Autowired
     private TaskSpecifications ts;
 
     // todo: figure out joining queries
 
-    public List<Task> getAllTasks() {
-        List<Task> tasks = new ArrayList<>();
+    public Set<Task> getAllTasks() {
+        Set<Task> tasks = new HashSet<>();
         taskRepo.findAll().forEach(tasks::add);
         return tasks;
     }
@@ -32,16 +37,38 @@ public class TaskService {
         return taskRepo.findById(id);
     }
 
-    public void createTask(Task task) {
+    public ResponseEntity createTask(Task task) {
+        // todo: user needs to be project member
+        Integer project_id = task.getProjectId();
+        Integer user_id = task.getCreatedBy();
+        // first, ensure that the user who is creating the task exists
+        if (!userRepo.existsById(user_id)) {
+            return new ResponseEntity("Creator user does not exist", HttpStatus.BAD_REQUEST);
+        }
+        // then, ensure that the project the task is being created under exists
+        if (!projectRepo.existsById(project_id)) {
+            return new ResponseEntity("Project does not exist", HttpStatus.BAD_REQUEST);
+        }
         taskRepo.save(task);
+        return new ResponseEntity("Task created successfully", HttpStatus.CREATED);
     }
 
-    public void updateTask(Integer id, Task task) {
+    public ResponseEntity updateTask(Integer id, Task task) {
+        // check that task exists
+        if (!taskRepo.existsById(id)) {
+            return new ResponseEntity("Task does not exist", HttpStatus.BAD_REQUEST);
+        }
         taskRepo.save(task);
+        return new ResponseEntity(task, HttpStatus.OK);
     }
 
-    public void deleteTask(Integer id) {
+    public ResponseEntity deleteTask(Integer id) {
+        // check that task exists
+        if (!taskRepo.existsById(id)) {
+            return new ResponseEntity("Task does not exist", HttpStatus.BAD_REQUEST);
+        }
         taskRepo.deleteById(id);
+        return new ResponseEntity("Task deleted successfully", HttpStatus.OK);
     }
 
     // search for tasks in the db that share attributes with the passed-in task
@@ -49,11 +76,11 @@ public class TaskService {
         return ts.search(task);
     }
 
-    public void getAssignees(Integer id) {
-
+    public List<User> getAssignees(Task task) {
+        return ts.getAssignees(task);
     }
 
-    public void getTasksByTags(Integer id) {
-
-    }
+//    public List<Task> getTasksByTags(Integer id) {
+//
+//    }
 }

@@ -1,36 +1,67 @@
 package com.example.pigeonbackend.datatypes.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+//@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="project_members", schema="project_data")
 public class ProjectMember {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Integer project_id;
+    private Integer projectId;
     @Column
-    private Integer member_id;
+    private Integer memberId;
     @Column
-    private Boolean can_create_task;
+    private Boolean canCreateTask;
     @Column
-    private Boolean can_edit_task;
+    private Boolean canEditTask;
     @Column
-    private Boolean can_delete_task;
+    private Boolean canDeleteTask;
     @Column
-    private Boolean can_assign_task;
+    private Boolean canAssignTask;
     @Column
-    private Boolean can_set_due_date;
+    private Boolean canSetDueDate;
 
-    public void setCanCreateTask(Boolean perm)  { this.can_create_task=perm; }
-    public void setCanEditTask(Boolean perm)  { this.can_edit_task=perm; }
-    public void setCanDeleteTask(Boolean perm)  { this.can_delete_task=perm; }
-    public void setCanAssignTask(Boolean perm)  { this.can_assign_task=perm; }
-    public void setCanSetDueDate(Boolean perm)  { this.can_set_due_date=perm; }
+    public void setCanAssignTask(Boolean canAssignTask) {
+        this.canAssignTask = canAssignTask;
+    }
+
+    public void setCanCreateTask(Boolean canCreateTask) {
+        this.canCreateTask = canCreateTask;
+    }
+
+    public void setCanEditTask(Boolean canEditTask) {
+        this.canEditTask = canEditTask;
+    }
+
+    public void setCanDeleteTask(Boolean canDeleteTask) {
+        this.canDeleteTask = canDeleteTask;
+    }
+
+    public void setCanSetDueDate(Boolean canSetDueDate) {
+        this.canSetDueDate = canSetDueDate;
+    }
+
+    public Boolean getCanAssignTask() {
+        return canAssignTask;
+    }
+
+    public Boolean getCanCreateTask() {
+        return canCreateTask;
+    }
+
+    public Boolean getCanEditTask() {
+        return canEditTask;
+    }
+
+    public Boolean getCanDeleteTask() {
+        return canDeleteTask;
+    }
+
+    public Boolean getCanSetDueDate() {
+        return canSetDueDate;
+    }
 }

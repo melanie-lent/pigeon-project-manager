@@ -1,5 +1,6 @@
 package com.example.pigeonbackend.service;
 
+import com.example.pigeonbackend.datatypes.model.Project;
 import com.example.pigeonbackend.datatypes.model.User;
 import com.example.pigeonbackend.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -21,8 +20,8 @@ public class UserService {
     private UserRepo userRepo;
     private BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
+    public Set<User> getAllUsers() {
+        Set<User> users = new HashSet<>();
         userRepo.findAll().forEach(users::add);
         return users;
     }
@@ -31,20 +30,11 @@ public class UserService {
         return userRepo.findById(id);
     }
 
-    public Boolean userExistsById(Integer id) {
-        return (userRepo.findById(id).isPresent()) ? true : false;
-    }
-
     @ResponseStatus()
-    public Boolean userExistsByUsername(String username) {
-        return userRepo.existsByUsername(username);
-    }
-
-    // todo: update functions to return status codes
     public ResponseEntity createUser(User user) {
-        if (userRepo.existsByUsername(user.getUsername())) {
-            return new ResponseEntity("User already exists", HttpStatus.BAD_REQUEST);
-        }
+//        if (userRepo.existsByUsername(user.getUsername())) {
+//            return new ResponseEntity("User already exists", HttpStatus.BAD_REQUEST);
+//        }
         user.setHash(bcrypt.encode(user.getHash()));
         userRepo.save(user);
         return new ResponseEntity("Created new user", HttpStatus.CREATED);
@@ -69,5 +59,11 @@ public class UserService {
         }
         userRepo.deleteById(id);
         return new ResponseEntity("Deleted user", HttpStatus.OK);
+    }
+
+    public Set<Project> getProjects(Integer user_id) {
+        Optional<User> user = userRepo.findById(user_id);
+//        return user.get().getMembership();
+        return null;
     }
 }

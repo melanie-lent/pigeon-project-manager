@@ -1,12 +1,14 @@
 package com.example.pigeonbackend.controller;
 
 import com.example.pigeonbackend.datatypes.model.Project;
+import com.example.pigeonbackend.datatypes.model.User;
 import com.example.pigeonbackend.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class ProjectController {
@@ -14,7 +16,7 @@ public class ProjectController {
     private ProjectService projectService = new ProjectService();
 
     @GetMapping("/project/all")
-    public List<Project> getAllProjects() {
+    public Set<Project> getAllProjects() {
         return projectService.getAllProjects();
     }
     @RequestMapping(method=RequestMethod.GET, value="/project/{id}")
@@ -23,16 +25,21 @@ public class ProjectController {
     }
 
     @RequestMapping(method= RequestMethod.POST, value="/project")
-    public void createProject(@RequestBody Project project) {
-        projectService.createProject(project);
+    public ResponseEntity createProject(@RequestBody Project project) {
+        return projectService.createProject(project);
     }
-    @RequestMapping(method= RequestMethod.PUT, value="/project/{id}")
-    public void updateProject(@PathVariable Integer id, @RequestBody Project project) {
-        projectService.updateProject(id, project);
+    @RequestMapping(method= RequestMethod.PUT, value="/project/{project_id}")
+    public ResponseEntity updateProject(@PathVariable Integer project_id, @RequestBody Project project) {
+        return projectService.updateProject(project_id, project);
     }
     @RequestMapping(method= RequestMethod.DELETE, value="/project/{id}")
-    public void deleteProject(@PathVariable Integer id) {
-        projectService.deleteProject(id);
+    public ResponseEntity deleteProject(@PathVariable Integer id) {
+        return projectService.deleteProject(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/project/members/{id}")
+    public Set<User> getMembers(@PathVariable Integer id) {
+        return projectService.getMembers(id);
     }
 
 }

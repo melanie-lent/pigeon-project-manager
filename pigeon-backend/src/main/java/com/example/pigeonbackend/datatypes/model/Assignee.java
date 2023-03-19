@@ -14,9 +14,9 @@ public class Assignee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Integer assignee_id;
+    private Integer assigneeId;
     @Column
-    private Integer task_id;
+    private Integer taskId;
 
-    public void setAssigneeId(Integer assignee_id)  { this.assignee_id=assignee_id; }
+    public void setAssigneeId(Integer assignee_id)  { this.assigneeId=assignee_id; }
 }

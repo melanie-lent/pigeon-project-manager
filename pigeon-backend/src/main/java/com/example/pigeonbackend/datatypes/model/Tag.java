@@ -15,8 +15,8 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column
-    private String tag_text;
-    private Integer task_id;
+    private String tagText;
+    private Integer taskId;
 
-    public void setTagText(String tag_text)  { this.tag_text=tag_text; }
+    public void setTagText(String tag_text)  { this.tagText=tag_text; }
 }

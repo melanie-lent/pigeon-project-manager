@@ -1,12 +1,10 @@
 package com.example.pigeonbackend.repo;
 
 import com.example.pigeonbackend.datatypes.model.Task;
+import com.example.pigeonbackend.datatypes.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import jakarta.persistence.metamodel.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,20 +23,20 @@ public class TaskSpecifications {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (params.getId() != null) {
-            predicates.add(cb.equal(root.get("id"), params.getId()));
+        if (params.getTaskId() != null) {
+            predicates.add(cb.equal(root.get("task_id"), params.getTaskId()));
         }
 
-        if (params.getCreated_by() != null) {
-            predicates.add(cb.equal(root.get("created_by"), params.getCreated_by()));
+        if (params.getCreatedBy() != null) {
+            predicates.add(cb.equal(root.get("created_by"), params.getCreatedBy()));
         }
 
-        if (params.getProject_id() != null) {
-            predicates.add(cb.equal(root.get("project_id"), params.getProject_id()));
+        if (params.getProjectId() != null) {
+            predicates.add(cb.equal(root.get("project_id"), params.getProjectId()));
         }
 
-        if (params.getTask_name() != null) {
-            predicates.add(cb.like(root.get(type.getDeclaredSingularAttribute("task_name", String.class)), cb.lower(cb.literal("%" + params.getTask_name() + "%"))));
+        if (params.getTaskName() != null) {
+            predicates.add(cb.like(root.get(type.getDeclaredSingularAttribute("task_name", String.class)), cb.lower(cb.literal("%" + params.getTaskName() + "%"))));
         }
 
         if (params.getDescription() != null) {
@@ -49,24 +47,32 @@ public class TaskSpecifications {
             predicates.add(cb.equal(root.get("priority"), params.getPriority()));
         }
 
-        if (params.getDue_date() != null) {
-            predicates.add(cb.equal(root.get("due_date"), params.getDue_date()));
+        if (params.getDueDate() != null) {
+            predicates.add(cb.equal(root.get("due_date"), params.getDueDate()));
         }
 
-        if (params.getLast_edited() != null) {
-            predicates.add(cb.equal(root.get("last_edited"), params.getLast_edited()));
+        if (params.getLastEdited() != null) {
+            predicates.add(cb.equal(root.get("last_edited"), params.getLastEdited()));
         }
 
-        if (params.getCreated_on() != null) {
-            predicates.add(cb.equal(root.get("created_on"), params.getCreated_on()));
+        if (params.getCreatedOn() != null) {
+            predicates.add(cb.equal(root.get("created_on"), params.getCreatedOn()));
         }
 
         cq.where(cb.and(predicates.toArray(new Predicate[0]))).distinct(true).orderBy(cb.desc(root.get("task_name"))).getRestriction();
 
-        TypedQuery<Task> query = em.createQuery(cq);
+        return em.createQuery(cq).getResultList();
 
         //todo: make sure sql injections dont work
+        // TODO: 2/23/2023 add assignees to the search criteria
+    }
+    public List<User> getAssignees(Task task) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        Root<User> root = cq.from(User.class);
+        Join<User, Task> t = root.join("assignees");
+        cq.where(cb.equal(t.get("assignees"), task.getTaskId()));
 
-        return query.getResultList();
+        return em.createQuery(cq).getResultList();
     }
 }

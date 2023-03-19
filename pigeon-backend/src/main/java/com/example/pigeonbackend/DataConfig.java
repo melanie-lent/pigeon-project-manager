@@ -39,7 +39,6 @@ public class DataConfig {
     public InMemoryAuditEventRepository auditEventRepository() {
         return new InMemoryAuditEventRepository();
     }
-
     @Bean
     public TaskSpecifications taskSpecifications() { return new TaskSpecifications(); }
 

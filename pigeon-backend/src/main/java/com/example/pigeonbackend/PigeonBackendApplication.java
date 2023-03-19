@@ -1,6 +1,7 @@
 package com.example.pigeonbackend;
 
 import com.example.pigeonbackend.controller.UserController;
+import com.example.pigeonbackend.repo.UserRepo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
