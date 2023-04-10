@@ -3,6 +3,8 @@ package com.example.pigeonbackend.datatypes.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 //@Data
 @Entity
 @AllArgsConstructor
@@ -11,9 +13,9 @@ import lombok.*;
 public class ProjectMember {
     @Id
     @Column
-    private Integer projectId;
+    private UUID projectId;
     @Column
-    private Integer memberId;
+    private UUID memberId;
     @Column
     private Boolean canCreateTask;
     @Column

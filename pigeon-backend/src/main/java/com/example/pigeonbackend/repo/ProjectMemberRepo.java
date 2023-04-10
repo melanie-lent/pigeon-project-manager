@@ -6,7 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface ProjectMemberRepo extends JpaRepository<ProjectMember, Integer> {
-    public List<ProjectMember> findByProjectIdAndMemberId(Integer projectId, Integer memberId);
+public interface ProjectMemberRepo extends JpaRepository<ProjectMember, UUID> {
+    public List<ProjectMember> findByProjectIdAndMemberId(UUID projectId, UUID memberId);
 }

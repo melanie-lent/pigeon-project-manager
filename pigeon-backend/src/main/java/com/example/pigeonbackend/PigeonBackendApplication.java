@@ -1,7 +1,9 @@
 package com.example.pigeonbackend;
 
+import com.example.pigeonbackend.controller.AuthController;
+import com.example.pigeonbackend.controller.ProjectController;
+import com.example.pigeonbackend.controller.TaskController;
 import com.example.pigeonbackend.controller.UserController;
-import com.example.pigeonbackend.repo.UserRepo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,5 +15,9 @@ public class PigeonBackendApplication {
 	}
 
 	private UserController userController;
+	private ProjectController projectController;
+	private TaskController taskController;
+	private AuthController authController;
 	private DataConfig dataConfig;
+
 }

@@ -7,7 +7,7 @@ const ProjectList = () => {
     const [projects, setProjects] = useState([]);
 
     const getProjects = async () => {
-        const projects = await api.get('http://localhost:8080/project/all')
+        const projects = await api.get('http://127.0.0.1:8080/project/all')
             .then((res) => {
                 console.log(res);
                     setProjects(res.data);
@@ -16,9 +16,10 @@ const ProjectList = () => {
             .catch((e) => console.log(e));
     }
     
-    useEffect(() =>  {
-        getProjects();
-    }, [])
+    // useEffect(() =>  {
+    //     getProjects();
+    // }, []);
+
     return (
         <div className='project-list-container'>
             <div className='container'>

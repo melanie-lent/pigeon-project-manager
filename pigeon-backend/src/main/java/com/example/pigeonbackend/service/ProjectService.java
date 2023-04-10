@@ -9,6 +9,7 @@ import com.example.pigeonbackend.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,6 +28,8 @@ public class ProjectService {
     private UserRepo userRepo;
     @Autowired
     private ProjectMemberRepo projectMemberRepo;
+    @Autowired
+    private AuthHelper authHelper;
 
     public Set<Project> getAllProjects() {
         Set<Project> projects = new HashSet<>();
@@ -34,25 +37,26 @@ public class ProjectService {
         return projects;
     }
 
-    public Optional<Project> getProject(Integer id) {
+    @PreAuthorize("projectRepo.findById(id).getMembers().contains(authHelper.getPrincipalId())")
+    public Optional<Project> getProject(UUID id) {
         return projectRepo.findById(id);
     }
+//    @PreAuthorize("projectRepo.findById(id).getMembers().contains(auth.getId)")
+//    public Optional<Project> getProjectPublic(Integer id) {
+//        try {
+//            Project project = projectRepo.findById(id).get();
+//        } catch (Exception NoSuchElementException) {
+//            return
+//        }
+//    }
 
+    @PreAuthorize("project.getOwnerId() == authHelper.getPrincipalId()")
     public ResponseEntity createProject(Project project) {
         // first, check that the user who owns the project exists
         Optional<User> optOwner = userRepo.findById(project.getOwnerId());
         User owner;
         try {
             owner = optOwner.get();
-            // then, check that there isn't already a project by that owner with the same name
-
-            // actually fuck it users can have multiple "KickassCorp" projects
-//        System.out.println(project);
-////        if (!projectRepo.findByProjectNameAndOwnerId(project.getProjectName(), project.getOwnerId()).isEmpty()) {
-////            return new ResponseEntity("Project by that owner already exists", HttpStatus.BAD_REQUEST);
-////        }
-//        project.addToMembers(owner);
-//
             owner.addToInProjects(project);
             project.addToMembers(owner);
 
@@ -73,26 +77,52 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity updateProject(Integer id, Project project) {
+    @PreAuthorize("project.getOwnerId() == authHelper.getPrincipalId()")
+    public ResponseEntity updateProject(Project project) {
         // check that project exists
-        if (!projectRepo.existsById(id)) {
+        if (!projectRepo.existsById(project.getId())) {
             return new ResponseEntity("Project does not exist", HttpStatus.BAD_REQUEST);
         }
+        // you CANNOT add members using this function; have to use the addMember() function
         projectRepo.save(project);
         return new ResponseEntity(project, HttpStatus.OK);
     }
 
-    public ResponseEntity deleteProject(Integer id) {
+    @PreAuthorize("(project.getMembers().contains(authHelper.getPrincipalId)) && (project.getOwnerId() == authHelper.getPrincipalId())")
+    public ResponseEntity addMember(UUID projectId, UUID userId) {
         // check that project exists
-        if (!projectRepo.existsById(id)) {
-            return new ResponseEntity("Project does not exist", HttpStatus.BAD_REQUEST);
+        try {
+            Project project = projectRepo.getById(projectId);
+            Set<User> members = project.getMembers();
+            User addedUser = userRepo.findById(userId).get();
+            // if the added user is already in the project, just return
+            if (members.contains(addedUser)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            // otherwise, move on to adding the user
+            project.addToMembers(addedUser);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception NoSuchElementException) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        projectRepo.deleteById(id);
-        return new ResponseEntity("Project deleted successfully", HttpStatus.OK);
     }
 
-    public Set<User> getMembers(Integer project_id) {
-        Optional<Project> project = projectRepo.findById(project_id);
+    @PreAuthorize("ownerId == authHelper.getPrincipalId()")
+    public ResponseEntity deleteProject(UUID id) {
+        try {
+            UUID ownerId = projectRepo.findById(id).get().getOwnerId();
+            // delete the project if it exists
+            projectRepo.deleteById(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception NoSuchElementException) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // todo: try editing methods that return users, so that they only return some of the data about them. we can't have people getting other users' hashes from request/response body
+    @PreAuthorize("projectRepo.findById(id).get().getMembers().contains(authHelper.getPrincipalId())")
+    public Set<User> getMembers(UUID id) {
+        Optional<Project> project = projectRepo.findById(id);
         return project.map(Project::getMembers).orElse(null);
     }
 }

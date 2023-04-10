@@ -8,14 +8,14 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
-public interface TaskRepo extends JpaRepository<Task, Integer>, JpaSpecificationExecutor<Task> {
+public interface TaskRepo extends JpaRepository<Task, UUID>, JpaSpecificationExecutor<Task> {
 
 //    Optional<Task> findByProject_idAndCreated_by(Integer project_id, Integer created_by);
 //    Optional<Task> findByProject_id(Integer project_id);
-    List<Task> findByTaskNameContaining(String taskName);
+    List<Task> findByTaskNameContainingIgnoreCase(String taskName);
+    List<Task> findByDescriptionContainingIgnoreCase(String description);
+    Set<Task> findByTagsIn(Set<String> tags);
 }

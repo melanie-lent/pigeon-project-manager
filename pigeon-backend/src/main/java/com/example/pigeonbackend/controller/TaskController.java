@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class TaskController {
     @Autowired
     private TaskService taskService = new TaskService();
@@ -19,7 +23,7 @@ public class TaskController {
         return taskService.getAllTasks();
     }
     @RequestMapping(method=RequestMethod.GET, value="/task/{id}")
-    public Optional<Task> getTask(@PathVariable Integer id) {
+    public Optional<Task> getTask(@PathVariable UUID id) {
         return taskService.getTask(id);
     }
 
@@ -27,12 +31,12 @@ public class TaskController {
     public ResponseEntity createTask(@RequestBody Task task) {
         return taskService.createTask(task);
     }
-    @RequestMapping(method= RequestMethod.PUT, value="/task/{id}")
-    public ResponseEntity updateTask(@PathVariable Integer id, @RequestBody Task task) {
-        return taskService.updateTask(id, task);
+    @RequestMapping(method= RequestMethod.PUT, value="/task")
+    public ResponseEntity updateTask(@RequestBody Task task) {
+        return taskService.updateTask(task);
     }
     @RequestMapping(method= RequestMethod.DELETE, value="/task/{id}")
-    public ResponseEntity deleteTask(@PathVariable Integer id) {
+    public ResponseEntity deleteTask(@PathVariable UUID id) {
         return taskService.deleteTask(id);
     }
 

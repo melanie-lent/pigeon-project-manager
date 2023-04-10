@@ -1,5 +1,6 @@
 package com.example.pigeonbackend.datatypes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nimbusds.jose.shaded.gson.Gson;
 import com.nimbusds.jose.shaded.gson.GsonBuilder;
@@ -9,13 +10,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -24,12 +25,12 @@ import java.util.Set;
 @Table(name="users", schema="user_data")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+//    @JsonIgnore
     @Column
-    private String hash;
-
-//    private String email;
+    private String password;
+    private String email;
     private String username;
     @Column
     private String firstName;
@@ -61,24 +62,23 @@ public class User {
             inverseJoinColumns = @JoinColumn(name="ProjectId")
     )
     private Set<Project> inProjects;
-//    @ManyToMany(targetEntity = Task.class, fetch = FetchType.LAZY)
-//    @NotFound(action = NotFoundAction.IGNORE)
-//    @JoinTable(
-//            name="assignees",
-//            schema = "project_data",
-//            joinColumns = {
-////                    @JoinColumn(name="project_id"),
-//                    @JoinColumn(name="assigneeId")
-//            },
-//            inverseJoinColumns = @JoinColumn(name="taskId")
-//    )
-//    private Set<Task> assignedTasks;
 
-    public User(String username, String hash, String first_name, String last_name) {
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("assignedTasks")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JoinTable(
+            name="assignees",
+            schema = "project_data",
+            joinColumns = @JoinColumn(name="assigneeId"),
+            inverseJoinColumns = @JoinColumn(name="taskId")
+    )
+    private Set<Task> assignedTasks;
+
+    public User(String username, String password, String email, String first_name, String last_name) {
         super();
-        System.out.println(String.format("hellohello", hash,username,first_name,last_name));
-        this.hash=hash;
-//        this.email=email;
+        this.password=password;
+        this.email=email;
         this.username=username;
         this.firstName=first_name;
         this.lastName=last_name;
@@ -87,18 +87,21 @@ public class User {
 
     // TODO: 2/14/2023 Create sanitization for the set functions
 
-    public void setHash(String hash) {
-        this.hash=hash;
+    public void setPassword(String password) {
+        this.password=password;
     }
-
 
     public void setUsername(String username) { this.username=username; }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     public String getUsername() { return this.username; }
 
-//    public void setEmail(String hash) {
-//        this.email=email;
-//    }
+    public void setEmail(String email) {
+        this.email=email;
+    }
 
     public Set<Project> getInProjects() {
         return this.inProjects;
@@ -121,9 +124,13 @@ public class User {
     public void setLastLogin() {
         this.lastLogin=(Timestamp) Date.from(Instant.now());
     }
-
-//    public String toString() {
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        return gson.toJson(this);
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
 }

@@ -1,5 +1,6 @@
 .project-item {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 29px 0px;
+    padding:50px 100px;
 }
 
 .project-container {
@@ -7,4 +8,20 @@
     flex-direction: row;
     gap: 20px;
     flex-wrap: wrap;
+}
+
+.project-link {
+    font-family: "Calibri";
+    font-size: 15pt;
+    text-decoration: none;
+    color: none;
+}
+
+.project-name {
+    color:black;
+}
+
+.project-member-count {
+    font-size: 12pt;
+    color: gray;
 }

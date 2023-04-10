@@ -1,5 +1,6 @@
 package com.example.pigeonbackend.datatypes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -20,12 +20,12 @@ import java.util.Set;
 @Table(name="tasks", schema="project_data")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer taskId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column
-    private Integer createdBy;
+    private UUID createdBy;
     @Column
-    private Integer projectId;
+    private UUID projectId;
     @Column
     private String taskName;
     @Column
@@ -40,15 +40,28 @@ public class Task {
     @CreationTimestamp
     private Timestamp createdOn;
 
-//    @ManyToOne
-//    @JoinColumn(name="projectId", referencedColumnName = "projectId", insertable = false, updatable = false)
-//    private Project taskOfProject;
+    @ElementCollection
+    @CollectionTable(name="task_tags", schema="project_data")
+    private List<String> tags = new ArrayList<>();
 
-//    @ManyToMany(targetEntity = User.class, mappedBy = "assignedTasks")
-//    private Set<User> assignees;
+    @ManyToMany(mappedBy = "assignedTasks", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<User> assignees = new HashSet<>();
 
-    public Task(Integer created_by, Integer project_id, String task_name, String description, Integer priority) {
-        // todo: when creating a task, the parent project and creating user must exist. deletions of users and parent tasks (in future) do not cascade, unless it is the project owner that is deleted. deletions of projects do cascade.
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name="tags",
+//            schema = "project_data",
+//            joinColumns = @JoinColumn(name="tagId")
+//    )
+
+//    @Embeddable
+//    public class Tag {
+//        private Integer id;
+//        private String tagText;
+//    }
+
+    public Task(UUID created_by, UUID project_id, String task_name, String description, Integer priority) {
         super();
         this.createdBy=created_by;
         this.projectId=project_id;
@@ -75,4 +88,8 @@ public class Task {
     public void setLastEdited(Timestamp last_edited) {
         this.lastEdited=last_edited;
     }
+
+//    public List<String> getTags() {
+//        return this.tags;
+//    }
 }

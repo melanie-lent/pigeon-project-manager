@@ -6,11 +6,14 @@ import com.example.pigeonbackend.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class ProjectController {
     @Autowired
     private ProjectService projectService = new ProjectService();
@@ -20,7 +23,7 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
     @RequestMapping(method=RequestMethod.GET, value="/project/{id}")
-    public Optional<Project> getProject(@PathVariable Integer id) {
+    public Optional<Project> getProject(@PathVariable UUID id) {
         return projectService.getProject(id);
     }
 
@@ -28,17 +31,17 @@ public class ProjectController {
     public ResponseEntity createProject(@RequestBody Project project) {
         return projectService.createProject(project);
     }
-    @RequestMapping(method= RequestMethod.PUT, value="/project/{project_id}")
-    public ResponseEntity updateProject(@PathVariable Integer project_id, @RequestBody Project project) {
-        return projectService.updateProject(project_id, project);
+    @RequestMapping(method= RequestMethod.PUT, value="/project")
+    public ResponseEntity updateProject(@PathVariable@RequestBody Project project) {
+        return projectService.updateProject(project);
     }
     @RequestMapping(method= RequestMethod.DELETE, value="/project/{id}")
-    public ResponseEntity deleteProject(@PathVariable Integer id) {
+    public ResponseEntity deleteProject(@PathVariable UUID id) {
         return projectService.deleteProject(id);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/project/members/{id}")
-    public Set<User> getMembers(@PathVariable Integer id) {
+    public Set<User> getMembers(@PathVariable UUID id) {
         return projectService.getMembers(id);
     }
 

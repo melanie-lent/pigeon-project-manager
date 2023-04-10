@@ -6,12 +6,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface ProjectRepo extends JpaRepository<Project, Integer> {
+public interface ProjectRepo extends JpaRepository<Project, UUID> {
 //     Boolean existsByProjectNameAndOwnerId(String project_name, Integer owner_id);
 //
 //     List<Project> findByProjectNameAndOwnerId(String projectName, Integer ownerId);
-
-     List<Project> findByNameContaining(String name);
+     List<Project> findByNameContainingIgnoreCase(String name);
 }

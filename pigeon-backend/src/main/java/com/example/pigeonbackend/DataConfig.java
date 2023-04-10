@@ -1,6 +1,7 @@
 package com.example.pigeonbackend;
 
 import com.example.pigeonbackend.repo.TaskSpecifications;
+import com.example.pigeonbackend.service.AuthHelper;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +12,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Properties;
 
@@ -28,9 +23,9 @@ import java.util.Properties;
 @ComponentScan({"com.example.pigeonbackend"})
 @EntityScan(basePackages = "com.example.pigeonbackend")
 @EnableJpaRepositories(basePackages = "com.example.pigeonbackend")
-//@EnableWebSecurity
 public class DataConfig {
-
+    @Bean
+    public AuthHelper authHelper() { return new AuthHelper(); }
     @Bean
     public InMemoryHttpExchangeRepository createTraceRepository() {
         return new InMemoryHttpExchangeRepository();
@@ -41,13 +36,9 @@ public class DataConfig {
     }
     @Bean
     public TaskSpecifications taskSpecifications() { return new TaskSpecifications(); }
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() { return new BCryptPasswordEncoder(); }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-//        return http.getSharedObject(AuthenticationManagerBuilder.class)
-//                .authenticationProvider(daoAuthenticationProvider())
-//                .build();
-//    }
 
 //    @Bean
 //    public BCryptPasswordEncoder bcrypt() {
@@ -62,13 +53,4 @@ public class DataConfig {
 //        return new UserDetailsService();
 //    }
 //
-//    @Bean
-//    public DaoAuthenticationProvider daoAuthenticationProvider() {
-//        DaoAuthenticationProvider provider =
-//                new DaoAuthenticationProvider();
-//        // using bCryptPasswordEncoder()
-//        provider.setPasswordEncoder(bcrypt());
-//        provider.setUserDetailsService(userDetailsService);
-//        return provider;
-//    }
 }

@@ -23,20 +23,20 @@ public class TaskSpecifications {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (params.getTaskId() != null) {
-            predicates.add(cb.equal(root.get("task_id"), params.getTaskId()));
+        if (params.getId() != null) {
+            predicates.add(cb.equal(root.get("id"), params.getId()));
         }
 
         if (params.getCreatedBy() != null) {
-            predicates.add(cb.equal(root.get("created_by"), params.getCreatedBy()));
+            predicates.add(cb.equal(root.get("createdBy"), params.getCreatedBy()));
         }
 
         if (params.getProjectId() != null) {
-            predicates.add(cb.equal(root.get("project_id"), params.getProjectId()));
+            predicates.add(cb.equal(root.get("projectId"), params.getProjectId()));
         }
 
         if (params.getTaskName() != null) {
-            predicates.add(cb.like(root.get(type.getDeclaredSingularAttribute("task_name", String.class)), cb.lower(cb.literal("%" + params.getTaskName() + "%"))));
+            predicates.add(cb.like(root.get(type.getDeclaredSingularAttribute("taskName", String.class)), cb.lower(cb.literal("%" + params.getTaskName() + "%"))));
         }
 
         if (params.getDescription() != null) {
@@ -48,30 +48,39 @@ public class TaskSpecifications {
         }
 
         if (params.getDueDate() != null) {
-            predicates.add(cb.equal(root.get("due_date"), params.getDueDate()));
+            predicates.add(cb.equal(root.get("dueDate"), params.getDueDate()));
         }
 
         if (params.getLastEdited() != null) {
-            predicates.add(cb.equal(root.get("last_edited"), params.getLastEdited()));
+            predicates.add(cb.equal(root.get("lastEdited"), params.getLastEdited()));
         }
 
         if (params.getCreatedOn() != null) {
-            predicates.add(cb.equal(root.get("created_on"), params.getCreatedOn()));
+            predicates.add(cb.equal(root.get("createdOn"), params.getCreatedOn()));
         }
 
-        cq.where(cb.and(predicates.toArray(new Predicate[0]))).distinct(true).orderBy(cb.desc(root.get("task_name"))).getRestriction();
+//        if (params.getTags() != null) {
+//            predicates.add(cb.in(root.get("tags"), params.getTags());
+//        }
+//
+//        if (params.getAssignees() != null) {
+//            predicates.add(cb.in(root.get("assignees"), params.getAssignees());
+//        }
+
+        cq.where(cb.and(predicates.toArray(new Predicate[0]))).distinct(true).orderBy(cb.desc(root.get("taskName"))).getRestriction();
 
         return em.createQuery(cq).getResultList();
 
         //todo: make sure sql injections dont work
         // TODO: 2/23/2023 add assignees to the search criteria
+        // todo: add tags to search criteria
     }
     public List<User> getAssignees(Task task) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<User> cq = cb.createQuery(User.class);
         Root<User> root = cq.from(User.class);
         Join<User, Task> t = root.join("assignees");
-        cq.where(cb.equal(t.get("assignees"), task.getTaskId()));
+        cq.where(cb.equal(t.get("assignees"), task.getId()));
 
         return em.createQuery(cq).getResultList();
     }

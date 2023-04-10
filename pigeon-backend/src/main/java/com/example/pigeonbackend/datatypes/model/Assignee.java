@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -12,11 +13,11 @@ import lombok.NoArgsConstructor;
 @Table(name="assignees", schema="project_data")
 public class Assignee {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column
-    private Integer assigneeId;
+    private UUID assigneeId;
     @Column
-    private Integer taskId;
+    private UUID taskId;
 
-    public void setAssigneeId(Integer assignee_id)  { this.assigneeId=assignee_id; }
+    public void setAssigneeId(UUID assignee_id)  { this.assigneeId=assignee_id; }
 }

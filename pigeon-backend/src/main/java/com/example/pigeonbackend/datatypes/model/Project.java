@@ -6,9 +6,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -21,27 +24,27 @@ import java.util.Set;
 @Table(name="projects", schema="project_data")
 public class Project {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column
     private String name;
     @Column
-    private Integer ownerId;
+    private UUID ownerId;
 
     //    @ManyToMany(targetEntity = User.class, mappedBy = "inProjects", fetch = FetchType.LAZY)
 //    @JsonIgnoreProperties("inProjects")
 //    @ToString.Exclude
 //    @NotFound(action = NotFoundAction.IGNORE)
 
-    @ManyToMany(mappedBy = "inProjects", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Set<User> members = new HashSet<User>();
+    @ManyToMany(mappedBy = "inProjects", fetch = FetchType.LAZY)
+//    @JsonIgnore
+    private Set<User> members;
 
-//    @OneToMany(targetEntity = Task.class, mappedBy = "taskOfProject", fetch = FetchType.LAZY)
-//    @NotFound(action = NotFoundAction.IGNORE)
-//    private Set<Task> tasks = new HashSet<Task>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="projectId")
+    private Set<Task> tasks;
 
-    public Project(String name, Integer owner_id) {
+    public Project(String name, UUID owner_id) {
         super();
         this.name=name;
         this.ownerId=owner_id;
@@ -52,14 +55,10 @@ public class Project {
     }
 
     public void addToMembers(User user) {
-//        System.out.println(user);
         if (!this.members.contains(user)) {
-            System.out.println("user is not already in member list");
             this.members.add(user);
         }
     }
-
-    // todo: figure out how to add owner to members by default
 
 //    public String toString() {
 //        Gson gson = new GsonBuilder().setPrettyPrinting().create();
