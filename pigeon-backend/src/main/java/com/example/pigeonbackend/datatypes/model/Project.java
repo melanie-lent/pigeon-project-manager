@@ -30,6 +30,8 @@ public class Project {
     private String name;
     @Column
     private UUID ownerId;
+    @Column
+    private String description;
 
     //    @ManyToMany(targetEntity = User.class, mappedBy = "inProjects", fetch = FetchType.LAZY)
 //    @JsonIgnoreProperties("inProjects")
@@ -37,17 +39,18 @@ public class Project {
 //    @NotFound(action = NotFoundAction.IGNORE)
 
     @ManyToMany(mappedBy = "inProjects", fetch = FetchType.LAZY)
-//    @JsonIgnore
-    private Set<User> members;
+    @JsonIgnore
+    private Set<User> members = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="projectId")
-    private Set<Task> tasks;
+    private Set<Task> tasks = new HashSet<>();
 
-    public Project(String name, UUID owner_id) {
+    public Project(String name, UUID owner_id, String description) {
         super();
         this.name=name;
         this.ownerId=owner_id;
+        this.description=description;
     }
 
     public Set<User> getMembers() {

@@ -85,8 +85,6 @@ public class User {
         this.createdOn=(Timestamp) Date.from(Instant.now());
     }
 
-    // TODO: 2/14/2023 Create sanitization for the set functions
-
     public void setPassword(String password) {
         this.password=password;
     }

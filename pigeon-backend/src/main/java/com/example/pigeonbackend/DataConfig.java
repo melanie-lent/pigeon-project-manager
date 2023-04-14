@@ -1,7 +1,8 @@
 package com.example.pigeonbackend;
 
 import com.example.pigeonbackend.repo.TaskSpecifications;
-import com.example.pigeonbackend.service.AuthHelper;
+import com.example.pigeonbackend.service.AuthenticatedUserService;
+import com.example.pigeonbackend.service.AuthenticatedUserService;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "com.example.pigeonbackend")
 public class DataConfig {
     @Bean
-    public AuthHelper authHelper() { return new AuthHelper(); }
+    public AuthenticatedUserService authHelper() { return new AuthenticatedUserService(); }
     @Bean
     public InMemoryHttpExchangeRepository createTraceRepository() {
         return new InMemoryHttpExchangeRepository();

@@ -18,15 +18,20 @@ function ProjectItem(props) {
         <div className='project-container'>
             <Link to=
                 {{
-                    pathname: `/project/${props.props.id}`,
-                    state: props
+                    pathname: `/project/${project.id}`,
+                    state: project.id
                 }} 
                 params={project.id} className="current project-link"
             >
                 <div className='project-item'>
-                    <img src="" className='project-icon'/>
-                    <p className='project-name'>{props.props.name}</p>
-                    <p className='project-member-count'>{props.props.members.length} members</p>
+                    {/* <img src="" className='project-icon'/> */}
+                    <p className='project-name'>{project.name}</p>
+                    <div className='project-desc-container'>
+                        {project.description != "" ? 
+                            <p className='project-desc'>{project.description}</p>
+                        : <p className='project-desc no-desc'>(No Description)</p>}
+                    </div>
+                    {/* <p className='project-member-count'>{project.members.length} members</p> */}
                     <img src='' className='project-settings-icon'/>
                 </div>
             </Link>

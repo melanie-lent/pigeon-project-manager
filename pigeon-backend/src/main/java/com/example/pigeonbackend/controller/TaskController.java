@@ -26,7 +26,10 @@ public class TaskController {
     public Optional<Task> getTask(@PathVariable UUID id) {
         return taskService.getTask(id);
     }
-
+    @RequestMapping(method=RequestMethod.GET, value="/user/task/{id}")
+    public Set<Task> getTasksByUser(@PathVariable UUID id) {
+        return taskService.getTasksByUser(id);
+    }
     @RequestMapping(method= RequestMethod.POST, value="/task")
     public ResponseEntity createTask(@RequestBody Task task) {
         return taskService.createTask(task);

@@ -3,6 +3,7 @@ package com.example.pigeonbackend.service;
 import com.example.pigeonbackend.datatypes.model.Project;
 import com.example.pigeonbackend.datatypes.model.User;
 import com.example.pigeonbackend.datatypes.model.auth.UserDetailsImpl;
+import com.example.pigeonbackend.repo.ProjectRepo;
 import com.example.pigeonbackend.repo.UserRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.*;
 
@@ -25,29 +25,14 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepo userRepo;
     private BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-    private JwtService jwtService;
+//    private JwtService jwtService;
 
     @Autowired
-    private AuthHelper authHelper;
+    private AuthenticatedUserService authHelper;
+    @Autowired
+    private ProjectRepo projectRepo;
 
     // todo: next step is to do actual authentication on /login and /signup
-//    @ResponseStatus()
-//    public AuthResponse signup(User user) {
-//        try {
-//            createUser(user);
-//            var jwtToken = jwtService.generateToken((UserDetails) user); // todo: this almost definitely doesnt cast properly
-//            return AuthResponse.builder()
-//                    .token(jwtToken)
-//                    .build();
-//        } catch (Exception NoSuchElementException) {
-//            return
-//        }
-//    }
-//
-//    @ResponseStatus()
-//    public AuthResponse login(AuthRequest req) {
-//        authManager.authenticate(new UsernamePasswordAuthenticationToken((req.getUsername(), req.getHash())))
-//    }
 
     public Boolean createUser(User user) {
         if (userRepo.existsByUsername(user.getUsername())) {
@@ -64,14 +49,13 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
-    @PreAuthorize("id == authHelper.getPrincipalId()")
-    public Optional<User> getUser(UUID id) {
+    @PreAuthorize("@authHelper.idMatches(#id, #authToken)")
+    public Optional<User> getUser(UUID id, String authToken) {
         return userRepo.findById(id);
     }
 
-    // todo: i worry about this here. can somebody bypass this
-    @PreAuthorize("id == authHelper.getPrincipalId()")
-    public ResponseEntity updateUser(UUID id, User user) {
+    @PreAuthorize("@authHelper.idMatches(#id, #authToken)")
+    public ResponseEntity updateUser(UUID id, User user, String authToken) {
         if (!userRepo.existsById(id)) {
             return new ResponseEntity("User does not exist", HttpStatus.BAD_REQUEST);
         }
@@ -83,20 +67,32 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity("Updated user", HttpStatus.OK);
     }
 
-    @PreAuthorize("id == authHelper.getPrincipalId()")
-    public ResponseEntity deleteUser(UUID id) {
-        if (!userRepo.existsById(id)) {
+    @PreAuthorize("@authHelper.idMatches(#id, #authToken)")
+    public ResponseEntity deleteUser(UUID id, String authToken) {
+        try {
+            userRepo.deleteById(id);
+            return new ResponseEntity("Deleted user", HttpStatus.OK);
+        } catch (Exception NoSuchElementException) {
             return new ResponseEntity("User does not exist", HttpStatus.BAD_REQUEST);
         }
-        userRepo.deleteById(id);
-        return new ResponseEntity("Deleted user", HttpStatus.OK);
     }
 
-    @PreAuthorize("id == authHelper.getPrincipalId()")
-    public Set<Project> getProjects(UUID id) {
-        Optional<User> user = userRepo.findById(id);
-//        return user.get().getMembership();
-        return null;
+    @PreAuthorize("@authHelper.idMatches(#id, #authToken)")
+    public Set<Project> getProjectsByOwner(UUID id, String authToken) {
+        try {
+            return projectRepo.findAllByOwnerId(id);
+        } catch (Exception NoSuchElementException) {
+            return new HashSet<>();
+        }
+    }
+
+    @PreAuthorize("@authHelper.idMatches(#id, #authToken)")
+    public Set<Project> getProjectsByMemberNotOwner(UUID id, String authToken) {
+        try {
+            return projectRepo.getProjectsByMemberNotOwner(id);
+        } catch (Exception NoSuchElementException) {
+            return new HashSet<>();
+        }
     }
 
     @Override

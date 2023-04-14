@@ -1,7 +1,7 @@
-.navigate-bg-gradient {
+/* .navigate-bg-gradient {
     background-color: darkorchid;
     background: radial-gradient(#130044 0%, #2e00a5 62%, #130044 100%);
-}
+} */
 
 nav a {
     text-decoration: none;
@@ -22,6 +22,6 @@ nav a {
 
 .navigate-container {
     /* max-width: 100%; */
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 29px 0px;
-    background-color: darkorchid;
+    /* box-shadow: rgba(0, 0, 0, 0.3) 0px 7px 29px 0px; */
+    background-color: rgb(34, 4, 139);
 }

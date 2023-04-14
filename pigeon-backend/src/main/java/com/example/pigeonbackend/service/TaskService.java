@@ -24,7 +24,7 @@ public class TaskService {
     @Autowired
     private TaskSpecifications ts;
     @Autowired
-    private AuthHelper authHelper;
+    private AuthenticatedUserService authHelper;
 
     public Boolean userIsInProject(UUID userId, UUID projectId) {
         try {
@@ -55,7 +55,6 @@ public class TaskService {
 
     @PreAuthorize("task.getCreatedBy() == authHelper.getPrincipalId()")
     public ResponseEntity<String> createTask(Task task) {
-        // todo: user needs to be project member
         /* process:
         1. project exists
         2. creator exists
@@ -147,7 +146,7 @@ public class TaskService {
 //        }
         try {
             // todo: implement perms
-            List<String> tags = task.getTags();
+            Set<String> tags = task.getTags();
             if (tags.contains(tag)) return new ResponseEntity<Object>(HttpStatus.OK);
             tags.add(tag);
             task.setTags(tags);
@@ -164,7 +163,7 @@ public class TaskService {
 //        }
         try {
             // todo: implement perms
-            List<String> tags = task.getTags();
+            Set<String> tags = task.getTags();
             if (!tags.contains(tag)) return new ResponseEntity<Object>(HttpStatus.OK);
             tags.remove(tag);
             task.setTags(tags);
@@ -199,6 +198,10 @@ public class TaskService {
 
     public Set<User> getAssignees(Task task) {
         return task.getAssignees();
+    }
+
+    public Set<Task> getTasksByUser(UUID id) {
+        return taskRepo.getByAssignees(new HashSet<UUID>(Collections.singleton(id)));
     }
 
 //    public List<Task> getTasksByTags(UUID id) {

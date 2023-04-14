@@ -42,7 +42,7 @@ public class Task {
 
     @ElementCollection
     @CollectionTable(name="task_tags", schema="project_data")
-    private List<String> tags = new ArrayList<>();
+    private Set<String> tags = new HashSet<>();
 
     @ManyToMany(mappedBy = "assignedTasks", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -69,11 +69,9 @@ public class Task {
         this.description=description;
         this.priority=priority;
         this.createdOn=(Timestamp) Date.from(Instant.now());
+        this.assignees = new HashSet<>();
+        this.tags = new HashSet<>();
     }
-
-    // TODO: 2/14/2023 Create sanitization for the set functions
-    // TODO: 2/23/2023 get many-many relationship with users and tasks working properly
-    // TODO: 2/23/2023 add many-many relationship for parent and child tasks. have deletions cascade
 
     public void setTaskName(String task_name) {
         this.taskName=task_name;

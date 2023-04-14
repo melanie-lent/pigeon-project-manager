@@ -13,9 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static java.util.Objects.isNull;
 
 @Service
 public class ProjectService {
@@ -29,16 +26,22 @@ public class ProjectService {
     @Autowired
     private ProjectMemberRepo projectMemberRepo;
     @Autowired
-    private AuthHelper authHelper;
+    private AuthenticatedUserService authHelper;
 
-    public Set<Project> getAllProjects() {
-        Set<Project> projects = new HashSet<>();
-        projectRepo.findAll().forEach(projects::add);
+    public List<Project> getAllProjects() {
+        System.out.println("get all projects");
+        List<Project> projects = projectRepo.findAll();
         return projects;
+//        return null;
+    }
+
+    @PreAuthorize("@authHelper.idMatches(#id, #authToken)")
+    public Set<Project> findAllByOwnerId(UUID id) {
+        return projectRepo.findAllByOwnerId(id);
     }
 
     @PreAuthorize("projectRepo.findById(id).getMembers().contains(authHelper.getPrincipalId())")
-    public Optional<Project> getProject(UUID id) {
+    public Optional<Project> getProject(UUID id, String authToken) {
         return projectRepo.findById(id);
     }
 //    @PreAuthorize("projectRepo.findById(id).getMembers().contains(auth.getId)")
@@ -50,19 +53,18 @@ public class ProjectService {
 //        }
 //    }
 
-    @PreAuthorize("project.getOwnerId() == authHelper.getPrincipalId()")
-    public ResponseEntity createProject(Project project) {
+    @PreAuthorize("@authHelper.idMatches(#project.getOwnerId(), #authToken)")
+    public ResponseEntity createProject(Project project, String authToken) {
         // first, check that the user who owns the project exists
-        Optional<User> optOwner = userRepo.findById(project.getOwnerId());
-        User owner;
         try {
-            owner = optOwner.get();
+            UUID ownerId = project.getOwnerId();
+            User owner = userRepo.findById(ownerId).get();
             owner.addToInProjects(project);
             project.addToMembers(owner);
 
             projectRepo.save(project);
 
-            ProjectMember projectMember = projectMemberRepo.findByProjectIdAndMemberId(project.getId(), owner.getId()).get(0);
+            ProjectMember projectMember = projectMemberRepo.findOneByProjectIdAndMemberId(project.getId(), owner.getId());
             projectMember.setCanAssignTask(true);
             projectMember.setCanCreateTask(true);
             projectMember.setCanDeleteTask(true);
@@ -71,13 +73,14 @@ public class ProjectService {
 
             projectMemberRepo.save(projectMember);
 
-            return new ResponseEntity("Project created successfully", HttpStatus.CREATED);
+            return new ResponseEntity(projectRepo.getById(project.getId()), HttpStatus.CREATED);
         } catch (Exception NoSuchElementException) {
+            System.out.println(NoSuchElementException);
             return new ResponseEntity("User does not exist", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PreAuthorize("project.getOwnerId() == authHelper.getPrincipalId()")
+    @PreAuthorize("@authHelper.idMatches(#project.getOwnerId(), #authToken)")
     public ResponseEntity updateProject(Project project) {
         // check that project exists
         if (!projectRepo.existsById(project.getId())) {
@@ -107,7 +110,7 @@ public class ProjectService {
         }
     }
 
-    @PreAuthorize("ownerId == authHelper.getPrincipalId()")
+    @PreAuthorize("@authHelper.idMatches(#ownerId, #authToken)")
     public ResponseEntity deleteProject(UUID id) {
         try {
             UUID ownerId = projectRepo.findById(id).get().getOwnerId();

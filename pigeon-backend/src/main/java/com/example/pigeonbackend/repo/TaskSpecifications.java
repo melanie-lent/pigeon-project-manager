@@ -71,7 +71,6 @@ public class TaskSpecifications {
 
         return em.createQuery(cq).getResultList();
 
-        //todo: make sure sql injections dont work
         // TODO: 2/23/2023 add assignees to the search criteria
         // todo: add tags to search criteria
     }

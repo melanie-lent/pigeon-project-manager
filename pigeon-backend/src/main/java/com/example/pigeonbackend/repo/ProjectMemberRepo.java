@@ -9,5 +9,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ProjectMemberRepo extends JpaRepository<ProjectMember, UUID> {
-    public List<ProjectMember> findByProjectIdAndMemberId(UUID projectId, UUID memberId);
+    public ProjectMember findOneByProjectIdAndMemberId(UUID projectId, UUID memberId);
 }

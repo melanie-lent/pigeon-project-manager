@@ -8,28 +8,32 @@ import LoginForm from './components/LoginForm.js';
 import logo from './logo.svg';
 import './style/App.css';
 
-import ProjectView from './pages/ProjectView';
-import Dashboard from './pages/layouts/Dashboard.js';
-import UserHome from './pages/UserHome.tsx';
-import ProjectDetails from './pages/ProjectDetails.js';
-import AuthenticationPage from './pages/layouts/AuthenticationPage.js';
+import ProjectView from './pages/project/ProjectView.js';
+import TaskView from './pages/task/TaskView.js';
+import Dashboard from './pages/Dashboard.js';
+import UserHome from './pages/UserHome.js';
+import ProjectDetails from './pages/project/ProjectDetails.js';
+import AuthenticationPage from './pages/AuthenticationPage.js';
+
+import NotFound from './pages/error handling/NotFound.js';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route exact path="/" element={<Dashboard />}>
+          <Route exact path="/" >
             <Route path="home" element={<UserHome />} />
-            <Route path='projectview' element={<ProjectView />} />
-            <Route path='taskview' />
-            {/* <Route path="*" element={<NoPage />} /> */}
-            <Route path='project/*' element={<ProjectDetails />} />
-          </Route>
-          <Route path="/auth" >
-            <Route index={true} element={<AuthenticationPage />} />
-            <Route path="login" element={<LoginForm />} />
-            <Route Path="signup" element={<SignupForm />} />
+            <Route path='projectview' element={<><Dashboard /><ProjectView /></>} />
+            <Route path='taskview' element={<><Dashboard /><TaskView /></>} />
+            <Route path='project' element={<Dashboard />}>
+              <Route path=":id" element={<ProjectDetails />} />
+            </Route>
+            <Route path="auth" >
+              <Route path="login" element={<LoginForm />} />
+              <Route Path="signup" element={<SignupForm />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </BrowserRouter>
