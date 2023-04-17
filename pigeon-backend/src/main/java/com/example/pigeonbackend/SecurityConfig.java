@@ -66,7 +66,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/login", "/signup", "/user/**", "/project/**").permitAll() //todo: remove /project/all, enable csrf protect.permitAll()
+                .requestMatchers("/login/**", "/signup/**", "/user/**", "/task/**", "/project/**", "/checkauth/**").permitAll() //todo: remove /project/all, enable csrf protect.permitAll()
 //////                .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                 .anyRequest()
                 .authenticated()
@@ -82,6 +82,7 @@ public class SecurityConfig {
                 .and()
                 .csrf()
                 .disable()
+//                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint((request, response, ex) -> {
                     unauthorizedHandler.commence(request, response, ex);
@@ -89,7 +90,7 @@ public class SecurityConfig {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        http.authenticationProvider(daoAuthenticatio nProvider());
+//        http.authenticationProvider(daoAuthenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 //
         return http.build();

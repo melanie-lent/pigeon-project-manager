@@ -17,21 +17,13 @@ const Layout = () => {
     //     }
     // })
     // .catch((e) => console.log(e));
-
-    useEffect(() => {
-        // getAuthenticated();
-    }, []);
     
-    return auth ? (
+    return (
         <main>
             <NavBar />
             <Outlet />
         </main>
-    ) : (
-        <div>
-            <Navigate replace to="/auth/login" />
-        </div>
-    )
+    );
 }
 
 export default Layout;

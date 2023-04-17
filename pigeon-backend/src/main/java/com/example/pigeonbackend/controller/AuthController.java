@@ -92,15 +92,14 @@ public class AuthController {
         return new ResponseEntity<>("Logged out", HttpStatus.OK);
     }
 
-//    @RequestMapping(method=RequestMethod.GET, value="/checkauth")
-//    public ResponseEntity<?> checkAuth(HttpServletRequest request) {
-////        System.out.println(SecurityContextHolder.getContext());
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-////        System.out.println(auth);
-//
-//        if (auth != null) {
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
+    @RequestMapping(method=RequestMethod.GET, value="/checkauth")
+    public ResponseEntity<?> checkAuth(HttpServletRequest request) {
+        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        Boolean expired = jwtUtils.isTokenExpired(authToken);
+
+        if (!expired) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

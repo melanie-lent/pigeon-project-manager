@@ -1,5 +1,7 @@
 import React from "react";
 
+import '../../style/Error.css';
+
 const Forbidden = () => {
     return (
         <div className="page-container">

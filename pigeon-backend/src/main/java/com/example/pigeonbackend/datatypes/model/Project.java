@@ -63,8 +63,9 @@ public class Project {
         }
     }
 
-//    public String toString() {
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        return gson.toJson(this);
-//    }
+    public void removeMember(User user) {
+        if (!this.members.contains(user) && user.getId() != this.ownerId) {
+            this.members.remove(user);
+        }
+    }
 }

@@ -24,8 +24,6 @@ public class ProjectMember {
     private Boolean canDeleteTask;
     @Column
     private Boolean canAssignTask;
-    @Column
-    private Boolean canSetDueDate;
 
     public void setCanAssignTask(Boolean canAssignTask) {
         this.canAssignTask = canAssignTask;
@@ -43,10 +41,6 @@ public class ProjectMember {
         this.canDeleteTask = canDeleteTask;
     }
 
-    public void setCanSetDueDate(Boolean canSetDueDate) {
-        this.canSetDueDate = canSetDueDate;
-    }
-
     public Boolean getCanAssignTask() {
         return canAssignTask;
     }
@@ -61,9 +55,5 @@ public class ProjectMember {
 
     public Boolean getCanDeleteTask() {
         return canDeleteTask;
-    }
-
-    public Boolean getCanSetDueDate() {
-        return canSetDueDate;
     }
 }

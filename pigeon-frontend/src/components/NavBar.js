@@ -1,15 +1,18 @@
 import React from 'react';
-import '../style/Navigate.css';
+import '../style/NavBar.css';
+import {Link} from 'react-router-dom';
 
-const Navigate = () => {
+
+const NavBar = () => {
     return (
-        <div className='navigate-container'>
-            <nav className='navigate'>
-                <div className='navigate-bg-gradient'>
-                    <ul className='navigate-list'>
-                        <li className='navigate-list-item'><a href="taskview">My Tasks</a></li>
-                        <li className='navigate-list-item'><a href="projectview">My Projects</a></li>
-                        <li className='navigate-list-item'><a href="settings">Profile</a></li>
+        <div className='navbar-container'>
+            <nav className='navbar'>
+                <div className='navbar-bg-gradient'>
+                    <ul className='navbar-list'>
+                        {/* <li className='navbar-list-item'><Link to="/taskview">My Tasks</Link></li> */}
+                        <li className='navbar-list-item'><Link to="/projectview">My Projects</Link></li>
+                        {/* <li className='navbar-list-item'><Link to="/settings">Profile</Link></li> */}
+                        <li className='navbar-list-item'><Link to="/logout">Log Out</Link></li>
                     </ul>
                 </div>
             </nav>
@@ -17,4 +20,4 @@ const Navigate = () => {
     )
 }
 
-export default Navigate;
+export default NavBar;

@@ -20,6 +20,7 @@ public interface TaskRepo extends JpaRepository<Task, UUID>, JpaSpecificationExe
     List<Task> findByTaskNameContainingIgnoreCase(String taskName);
     List<Task> findByDescriptionContainingIgnoreCase(String description);
     Set<Task> findByTagsIn(Set<String> tags);
+    Set<Task> findAllByProjectId(UUID id);
     @Query(value = "SELECT * FROM tasks UNION assignees ON tasks.id=assignees.task_id WHERE assignees.assignee_id = ?1", nativeQuery = true)
-    Set<Task> getByAssignees(Set<UUID> userIds);
+    Set<Task> findAllByAssignees(UUID userId);
 }

@@ -1,18 +1,16 @@
 package com.example.pigeonbackend.controller;
 
 import com.example.pigeonbackend.datatypes.model.Project;
+import com.example.pigeonbackend.datatypes.model.Task;
 import com.example.pigeonbackend.datatypes.model.User;
 import com.example.pigeonbackend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -58,6 +56,11 @@ public class UserController {
     public Set<Project> getProjectsByMemberNotOwner(@PathVariable UUID id, HttpServletRequest request) {
         String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         return userService.getProjectsByMemberNotOwner(id, authToken);
+    }
+    @RequestMapping(method = RequestMethod.GET, value="/user/assignedtasks/{id}")
+    public Set<Task> getTasksByUser(@PathVariable UUID id, HttpServletRequest request) {
+        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return userService.getTasksByUser(id, authToken);
     }
 
 }

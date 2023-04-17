@@ -1,23 +1,31 @@
-.login-container {
+.login-container, .error-container {
     padding: 2em;
     margin: auto;
     width: 30em;
+    margin-top: 10%;
 }
 
-.form-row {
-    display: flex;
-    justify-content: flex-end;
-    padding: .5em;
-}
-
-.form-row > label {
-    flex: 1;
+.error-container {
+    margin: auto;
+    color: white;
+    text-align: center;
     width: fit-content;
 }
 
+.error-message {
+    margin: 0;
+}
+
+.form-row {
+    display: block;
+    margin: auto;
+    text-align: center !important;
+    padding: .5em;
+}
+
 .form-row > input {
-  width: 5em;
-  flex: 3
+  width: 20em;
+  margin: auto;
 }
 
 .form-row > input,
@@ -30,8 +38,5 @@
     border: #480555 1px solid;
     color: white;
     border-radius: 10px;
-}
-
-.error-container {
-    text-align: center;
+    margin-top: .5em !important;
 }

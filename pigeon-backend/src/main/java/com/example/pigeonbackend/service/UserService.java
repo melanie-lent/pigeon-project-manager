@@ -1,9 +1,11 @@
 package com.example.pigeonbackend.service;
 
 import com.example.pigeonbackend.datatypes.model.Project;
+import com.example.pigeonbackend.datatypes.model.Task;
 import com.example.pigeonbackend.datatypes.model.User;
 import com.example.pigeonbackend.datatypes.model.auth.UserDetailsImpl;
 import com.example.pigeonbackend.repo.ProjectRepo;
+import com.example.pigeonbackend.repo.TaskRepo;
 import com.example.pigeonbackend.repo.UserRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class UserService implements UserDetailsService {
     // todo add some try catch statements here with status codes
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private TaskRepo taskRepo;
     private BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 //    private JwtService jwtService;
 
@@ -102,5 +106,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
         return UserDetailsImpl.build(user);
+    }
+
+    @PreAuthorize("@authHelper.idMatches(#id, #authToken)")
+    public Set<Task> getTasksByUser(UUID id, String authToken) {
+        return taskRepo.findAllByAssignees(id);
     }
 }

@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 const UserHome = () => {
     return (
         <div>
+            hi
         </div>
     );
 }

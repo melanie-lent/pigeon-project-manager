@@ -1,4 +1,5 @@
 import React from "react";
+import '../../style/Error.css';
 
 const NotFound = () => {
     return (

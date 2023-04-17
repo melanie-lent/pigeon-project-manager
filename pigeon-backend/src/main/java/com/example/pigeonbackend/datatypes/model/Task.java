@@ -34,6 +34,8 @@ public class Task {
     private Integer priority;
     @Column
     private Timestamp dueDate;
+    @Column(columnDefinition = "bool default false")
+    private Boolean isCompleted;
     @Column(name="last_edited", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp lastEdited;
     @Column(name="created_on", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -61,12 +63,13 @@ public class Task {
 //        private String tagText;
 //    }
 
-    public Task(UUID created_by, UUID project_id, String task_name, String description, Integer priority) {
+    public Task(UUID created_by, UUID project_id, String task_name, String description, Integer priority, Timestamp dueDate) {
         super();
-        this.createdBy=created_by;
-        this.projectId=project_id;
         this.taskName=task_name;
         this.description=description;
+        this.createdBy=created_by;
+        this.projectId=project_id;
+        this.dueDate=dueDate;
         this.priority=priority;
         this.createdOn=(Timestamp) Date.from(Instant.now());
         this.assignees = new HashSet<>();
@@ -76,7 +79,9 @@ public class Task {
     public void setTaskName(String task_name) {
         this.taskName=task_name;
     }
-
+    public void setIsCompleted(Boolean isCompleted) {
+        this.isCompleted = isCompleted;
+    }
     public void setPriority(Integer priority) { this.priority=priority; }
 
     public void setDueDate(Timestamp due_date) {
