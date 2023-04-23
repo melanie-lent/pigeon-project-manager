@@ -4,8 +4,9 @@ import { useLocation } from 'react-router-dom';
 import api from '../../api/axiosConfig';
 
 import '../../style/components/LightBox.css';
+import { RadioGroup } from "@mui/material";
 
-const CreateTaskLightBox = ({onClose}) => {
+const CreateTaskLightBox = ({onClose, onAddTask}) => {
     const ref = useRef(false);
     const location = useLocation();
     useEffect(() => {
@@ -55,6 +56,18 @@ const CreateTaskLightBox = ({onClose}) => {
         .then((res) => {
             if (res.status == 201) {
               setShowSuccess(true);
+              const taskData = {
+                id: res.data.id,
+                taskName: taskName,
+                description: taskDesc,
+                createdBy: userId,
+                projectId: projectId,
+                priority: taskPriority,
+                dueDate: taskDueDate,
+                isCompleted: false,
+                tags: taskTags
+              };
+              onAddTask(taskData);
             } else {
               setError('Looks like there was an issue. Try talking to the developer.');
             }
@@ -90,20 +103,21 @@ const CreateTaskLightBox = ({onClose}) => {
                 {!showSuccess ? (
                     <div className='task-create-form'>
                         <label className='task-create-form-prompt task-label' />
-                        <input name='task-name-input' className='task-name task-input' type='text' maxLength={64} required onChange={handleChangeTaskName} defaultValue={"New Task"} />
-                        <label className='task-create-form-prompt task-label' >Task Description</label>
-                        <textarea name='task-desc-input task-input' onChange={handleChangeTaskDesc} className="task-desc" />
+                        <input name='task-name-input' className='task-name-input task-input' type='text' maxLength={64} required onChange={handleChangeTaskName} placeholder={"Task Name"} />
+                        <textarea name='task-desc-input task-input' placeholder="Task Description" onChange={handleChangeTaskDesc} className="task-desc-input" />
                         <div className="priority-radio">
-                            <label className="priority-label" for="zero">None</label>
-                            <input className="priority-input" type="radio" name="priority" value={0} onChange={handleChangeTaskPriority} />
-                            <label className="priority-label" for="one">Low</label>
-                            <input className="priority-input" type="radio" name="priority" value={1} onChange={handleChangeTaskPriority} />
-                            <label className="priority-label"  for="two">Normal</label>
-                            <input className="priority-input" type="radio" name="priority" value={2} onChange={handleChangeTaskPriority} />
-                            <label className="priority-label"  for="three">High</label>
-                            <input className="priority-input" type="radio" name="priority" value={3} onChange={handleChangeTaskPriority} />
-                            <label className="priority-label"  for="four">Urgent</label>
-                            <input className="priority-input" type="radio" name="priority" value={4} onChange={handleChangeTaskPriority} />
+                            <RadioGroup row>
+                                <label className="priority-label" for="zero">None</label>
+                                <input className="priority-input" type="radio" name="priority" value={0} onChange={handleChangeTaskPriority} />
+                                <label className="priority-label" for="one">Low</label>
+                                <input className="priority-input" type="radio" name="priority" value={1} onChange={handleChangeTaskPriority} />
+                                <label className="priority-label"  for="two">Normal</label>
+                                <input className="priority-input" type="radio" name="priority" value={2} onChange={handleChangeTaskPriority} />
+                                <label className="priority-label"  for="three">High</label>
+                                <input className="priority-input" type="radio" name="priority" value={3} onChange={handleChangeTaskPriority} />
+                                <label className="priority-label"  for="four">Urgent</label>
+                                <input className="priority-input" type="radio" name="priority" value={4} onChange={handleChangeTaskPriority} />
+                            </RadioGroup>
                         </div>
                         <label className="task-duedate task-label" />
                         <input type="date" className="task-input" onChange={handleChangeTaskDueDate}  />

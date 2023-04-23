@@ -47,6 +47,7 @@ public class TaskController {
     @RequestMapping(method= RequestMethod.DELETE, value="/task/{id}")
     public ResponseEntity deleteTask(@PathVariable UUID id, HttpServletRequest request) {
         String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+//        System.out.println(authToken);
         return taskService.deleteTask(id, authToken);
     }
 

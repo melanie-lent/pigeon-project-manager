@@ -43,7 +43,7 @@ function App() {
               <Route path=":id" element={<ProjectDetails />} />
             </Route>
             <Route path="login" element={<LoginForm />} />
-            <Route Path="signup" element={<SignupForm />} />
+            <Route path="signup" element={<SignupForm />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

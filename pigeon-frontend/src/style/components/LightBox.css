@@ -41,7 +41,7 @@
     margin: 1.5em auto !important;
 }
 
-input, textarea {
+.dialog input, textarea {
     border-radius: 10px;
     border: darkgray 1px solid;
     width: 100%;
@@ -51,4 +51,16 @@ input, textarea {
 .dialog p, textarea {
     margin: .75em !important;
     color: black !important;
+}
+
+.task-desc-input {
+    margin: 0;
+}
+
+.task-name-input {
+    margin-left: 12px;
+}
+
+.priority-radio input, .priority-radio label {
+    display: inline;
 }

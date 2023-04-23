@@ -6,10 +6,10 @@ import React from 'react';
 import TaskItem from './TaskItem.js';
 import CreateTaskButton from './CreateTaskButton.js';
 
-// import '../style/components/TaskList.css';
+import '../../style/components/TaskList.css';
 
 const ProjectTaskList = (props) => {
-    const [tasks, setTasks] = useState({});
+    const [tasks, setTasks] = useState([]);
     const [isLoadingTasks, setIsLoadingTasks] = useState(true);
     const jwt = localStorage.getItem("jwt");
 
@@ -26,41 +26,83 @@ const ProjectTaskList = (props) => {
         )
         .catch((e) => console.log(e));
     }
-
-    const deleteTask = (e) => {
-        tasks.remove(e.target.value)
-    }
-
-    const handleDeleteTask = async (task) => {
-        // console.log("updated: ", newTask);
-        await api.delete(`http://127.0.0.1:8080/task/${task.id}`, {
-            headers: {
-                'Authorization': `${jwt}`
-            }
-        }).then((res) => {
-            if (res.status == 200) {
-                deleteTask(res.data);
-            }
-        });
-    }
     
     useEffect(() =>  {
         getTasks();
     }, []);
 
+    const handleTaskCreated = (task) => {
+        setTasks([...tasks, task]);
+    }
+
+    const handleDeleteTask = async (index, id) => {
+        await api.delete(`http://127.0.0.1:8080/task/${id}`, {
+            headers: {
+                'Authorization': `${jwt}`
+            }
+        }).then(
+            removeTaskFromList(index)
+        ).error((e) => {
+            console.log(e);
+        });
+      };
+
+      
+
+    const removeTaskFromList = (index) => {
+        console.log("removing task at index", index);
+        setTasks((prevTasks) => {
+          const newTasks = [...prevTasks];
+          newTasks.splice(index, 1);
+          return newTasks;
+        });
+      };
+
     return (
-        <div className='container'>
-            {isLoadingTasks && <div class="spinner-container"><Spinner animation="border" variant="light" className="task-list-spinner" /></div>}
-            {Object.keys(tasks).map((task) => 
-                <div className='task-item-container'>
-                    <TaskItem props={tasks[task]} className='item' />
-                    <div className='delete-task-button-container'>
-                        <button name='delete-task' className='delete-task-button' onClick={handleDeleteTask(tasks[task])}>X</button>
-                    </div>
-                </div>
-            )}
-            <CreateTaskButton className='item' props={props.props} />
-        </div>
+        <>
+            <div className="task-list-header-container">
+                <h3 className='task-list-header'>To Do</h3>
+            </div>
+            
+            <div className='container'>
+                {isLoadingTasks && <div class="spinner-container"><Spinner animation="border" variant="light" className="task-list-spinner" /></div>}
+                {tasks.map((task, index) => 
+                    <>
+                        {(!task.isCompleted && task.taskName != null) ? (
+                            <div className='task-item-container'>
+                                <div className='task-item'>
+                                    <TaskItem passedTask={task} className='item' onDelete={() => handleDeleteTask(index, task.id)} />
+                                </div>
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+                    </>
+                )}
+                {!isLoadingTasks && <CreateTaskButton className='item' onTaskCreated={handleTaskCreated} />}
+            </div>
+            <div className="task-list-header-container">
+                <h3 className='task-list-header'>Completed</h3>
+            </div>
+            <div className='container'>
+                {isLoadingTasks && <div class="spinner-container"><Spinner animation="border" variant="light" className="task-list-spinner" /></div>}
+                {tasks.map((task, index) =>
+                    task.id != null ?
+                        <>
+                            {task.isCompleted ? (
+                                <div className='task-item-container'>
+                                    <div className='task-item'>
+                                        <TaskItem passedTask={task} className='item' onDelete={() => handleDeleteTask(index, task.id)} />
+                                    </div>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+                        </>
+                    : <></>
+                )}
+            </div>
+        </>
     );   
 }
 

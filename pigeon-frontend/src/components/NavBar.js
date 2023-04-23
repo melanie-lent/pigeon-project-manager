@@ -12,7 +12,7 @@ const NavBar = () => {
                         {/* <li className='navbar-list-item'><Link to="/taskview">My Tasks</Link></li> */}
                         <li className='navbar-list-item'><Link to="/projectview">My Projects</Link></li>
                         {/* <li className='navbar-list-item'><Link to="/settings">Profile</Link></li> */}
-                        <li className='navbar-list-item'><Link to="/logout">Log Out</Link></li>
+                        {/* <li className='navbar-list-item'><Link to="/logout">Log Out</Link></li> */}
                     </ul>
                 </div>
             </nav>

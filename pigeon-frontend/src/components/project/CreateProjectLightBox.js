@@ -2,7 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import api from '../../api/axiosConfig';
 
-const CreateProjectLightBox = ({onClose}) => {
+import '../../style/components/LightBox.css';
+
+const CreateProjectLightBox = ({onClose, onAddProject}) => {
     const ref = useRef(false);
     useEffect(() => {
         const checkClickOutside = (e) => {
@@ -30,7 +32,7 @@ const CreateProjectLightBox = ({onClose}) => {
           await api.post('http://127.0.0.1:8080/project', {
             name: projectName,
             description: projectDesc,
-            ownerId: `${userId}`
+            ownerId: userId
           }, {
             headers: {
                 'Authorization': `${jwt}`
@@ -39,6 +41,13 @@ const CreateProjectLightBox = ({onClose}) => {
         .then((res) => {
             if (res.status == 201) {
               setShowSuccess(true);
+              const projectData = {
+                id: res.data.id,
+                name: projectName,
+                description: projectDesc,
+                ownerId: userId
+              };
+              onAddProject(projectData);
             } else {
               setError('Looks like there was an issue. Try talking to the developer.');
             }

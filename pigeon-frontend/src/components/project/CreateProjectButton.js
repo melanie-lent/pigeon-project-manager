@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LightBox from "./CreateProjectLightBox";
 import { useState } from "react";
 
-const CreateProjectButton = () => {
+const CreateProjectButton = ({onProjectCreated}) => {
     const [showLightBox, setShowLightBox]= useState(false);
+    const [project, setProject] = useState({});
+
+    useEffect(() => {
+        onProjectCreated(project);
+    }, [project]);
 
     const handleSetShowLightBox = () => {
         setShowLightBox(!showLightBox);
+    }
+
+    const addProject = (newProject) => {
+        setProject(newProject);
     }
 
     return (
@@ -15,10 +24,10 @@ const CreateProjectButton = () => {
                 <div className='item add-project' onClick={(e) => {
                     e.stopPropagation();
                     handleSetShowLightBox();
-                }}><p>Add a project!</p></div>
+                }}><p className="add-project-caption">Add a project!</p></div>
             </div>
             <div id='lightbox-root'>
-                {showLightBox && <LightBox onClose={handleSetShowLightBox} />}
+                {showLightBox && <LightBox onClose={handleSetShowLightBox} onAddProject={addProject} />}
             </div>
         </div>
     );

@@ -6,6 +6,8 @@ import Spinner from "react-bootstrap/Spinner";
 
 import ProjectTaskList from "../../components/task/ProjectTaskList.js";
 
+import "../../style/ProjectDetails.css";
+
 const ProjectDetails = () => {
     const location = useLocation();
     const pathname = location.pathname;

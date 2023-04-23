@@ -20,7 +20,7 @@ function ProjectItem(props) {
                 }} 
                 params={project.id} className="current project-link"
             >
-                <div className='project-item'>
+                <div className='project-item actual-project'>
                     {/* <img src="" className='project-icon'/> */}
                     <p className='project-name'>{project.name}</p>
                     <div className='project-desc-container'>
@@ -29,7 +29,7 @@ function ProjectItem(props) {
                         : <p className='project-desc no-desc'>(No Description)</p>}
                     </div>
                     {/* <p className='project-member-count'>{project.members.length} members</p> */}
-                    <img src='' className='project-settings-icon'/>
+                    {/* <img src='' className='project-settings-icon'/> */}
                 </div>
             </Link>
         </div>

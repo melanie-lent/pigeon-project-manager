@@ -41,9 +41,9 @@ public class TaskService {
 //    }
 
 //    @PreAuthorize("@authHelper.isInProject(#id, #token)")
-    public Set<Task> getTasksByProject(Project project, String authToken) {
-        return project.getTasks();
-    }
+//    public Set<Task> getTasksByProject(Project project, String authToken) {
+//        return project.getTasks();
+//    }
 
 //    public List<Task> getTasksByProjectAndTags(Project project, List<Tag> tags) {
 //        Set<Task> allTasks = project.getTasks();
@@ -81,7 +81,7 @@ public class TaskService {
 //                .map(String::toLowerCase)
 //                .collect(Collectors.toList()));
             taskRepo.save(task);
-            return new ResponseEntity<>("Task created successfully", HttpStatus.CREATED);
+            return new ResponseEntity(task, HttpStatus.CREATED);
         } catch (Exception NoSuchElementException) {
             return new ResponseEntity<>("Check that project and user exist", HttpStatus.NOT_FOUND);
         }
@@ -172,7 +172,7 @@ public class TaskService {
         }
     }
 
-        @PreAuthorize("@authHelper.isInProject(@authHelper.getProjectFromTaskId(#id).getId(), #token)")
+        @PreAuthorize("@authHelper.isInProject(@authHelper.getProjectFromTaskId(#id).getId(), #authToken)")
     public ResponseEntity deleteTask(UUID id, String authToken) {
         // check that task exists
 //        if (!taskRepo.existsById(id)) {

@@ -8,10 +8,13 @@ import '../../style/Login.css';
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const [error, setError] = useState("");
+
   const [jwt, setJwt] = useLocalState("", "jwt");
-  const navigate = useNavigate();
   const [storedId, setStoredId] = useLocalState("", "userId");
+  
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!username || !password) {

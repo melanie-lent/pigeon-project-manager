@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from '../../api/axiosConfig';
+import { useNavigate } from "react-router-dom";
+import { useLocalState } from "../../api/util/useLocalStorage";
 
 import '../../style/Login.css';
 
@@ -10,167 +13,117 @@ const SignUpForm = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
+  const [error, setError] = useState("");
+
+  const storedJwt = localStorage.getItem("jwt");
+  const [jwt, setJwt] = useLocalState("", "jwt");
+  const [storedId, setStoredId] = useLocalState("", "userId");
+  
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    await api.post('http://127.0.0.1:8080/login', {
+      username: username,
+      password: password
+    })
+    .then((res) => {
+      if (res.status == 200 || res.data == {}) {
+        setJwt(res.headers.get("authorization").replace(/['"]+/g, ''));
+        setStoredId(res.data.replace(/['"]+/g, ''));
+      } else {
+        setError("Something went wrong while signing in. Please visit the login page and try again with your username and password.");
+      }
+    });
+  }
+
+  const handleSubmit = async () => {
+    if (!username || !password || !confirmPassword || !email || !firstName || !lastName) {
+      setError("Please fill out all the fields!");
+    } else if (password != confirmPassword) {
+      setError("Passwords do not match")
+    } else {
+      await api.post('http://127.0.0.1:8080/signup', {
+        username: username,
+        password: password,
+        email: email,
+        firstName: firstName,
+        lastName: lastName
+      })
+      .then((res) => {
+        if (res.status == 201) {
+          handleLogin();
+        } else {
+          setError("There is already a user with that username or email.");
+        }
+      })
+      .catch ((e) => {
+        console.log(e);
+        setError("Something's gone wrong. Please contact the developer or try again later.");
+      }
+      );
+      // .error('Something\'s gone wrong. Please contact the developer or try again later.');
+    }
+  }
+
+  const handleChangeUsername = (event) => {
+    setUsername(event.target.value);
+  }
+
+  const handleChangePassword = (event) => {
+    setPassword(event.target.value);
+  }
+
+  const handleChangeConfirmPassword = (event) => {
+    setConfirmPassword(event.target.value);
+  }
+
+  const handleChangeFirstName = (event) => {
+    setFirstName(event.target.value);
+  }
+
+  const handleChangeLastName = (event) => {
+    setLastName(event.target.value);
+  }
+
+  const handleChangeEmail = (event) => {
+    setEmail(event.target.value);
+  }
+  
+  useEffect(() => {
+    console.log(storedJwt, storedId);
+    if (storedJwt != "" && storedId != "") {
+      navigate("/projectview");
+    }
+  }, [storedJwt, storedId]);
+
   return (
-    <div>
-      
+    <>
+    {storedJwt == "" || storedId == "" ? (
+    <div className="signup-container">
+      <div className="form-inline names multi-field">
+          <input className="firstname-input subfield" name="firstname" type="text"placeholder="First Name" onChange={handleChangeFirstName}/>
+          <input className="lastname-input subfield" name="lastname" type="text"placeholder="Last Name" onChange={handleChangeLastName}/>
+      </div>
+      <div className="form-row email-container">
+        <input className="email-input" name="email" type="email"placeholder="Email" onChange={handleChangeEmail}/>
+      </div>
+      <div className="form-row username-container">
+        <input className="username-input" name="username" type="text" placeholder="Username" onChange={handleChangeUsername} />
+      </div>
+      <div className="form-row password-and-confirm multi-field">
+          <input className="password-input subfield" name="password" type="password"placeholder="Password" onChange={handleChangePassword}/>
+          <input className="confirm-password-input subfield" name="confirm-password" type="password"placeholder="Confirm Password" onChange={handleChangeConfirmPassword}/>
+      </div>
+      <div className="form-row button-container">
+        <button type="submit" name="submit" className="signup-submit" onClick={handleSubmit}>Sign up!</button>
+      </div>
+      {error && <div className="form-row error-container"><p className="error-text">{error}</p></div>}
     </div>
-  )
+    ) : (
+      <div className="signup-container"></div>
+    )}
+    </>
+  );
 }
-
-// interface SignUpFormData {
-//   firstName: string;
-//   lastName: string;
-//   username: string;
-//   email: string;
-//   phoneNumber: string;
-//   password: string;
-//   confirmPassword: string;
-// }
-
-// const SignUpForm = () => {
-//   const [formData, setFormData] = useState<SignUpFormData>({
-//     firstName: "",
-//     lastName: "",
-//     username: "",
-//     email: "",
-//     phoneNumber: "",
-//     password: "",
-//     confirmPassword: "",
-//   });
-//   const [formErrors, setFormErrors] = useState<string[]>([]);
-
-//   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     setFormData({
-//       ...formData,
-//       [event.target.name]: event.target.value,
-//     });
-//   };
-
-//   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-//     event.preventDefault();
-
-//     const errors = [];
-
-//     if (!formData.firstName) {
-//       errors.push("First name is required");
-//     }
-
-//     if (!formData.lastName) {
-//       errors.push("Last name is required");
-//     }
-
-//     if (!formData.username) {
-//       errors.push("Username is required");
-//     }
-
-//     if (!formData.email) {
-//       errors.push("Email is required");
-//     }
-
-//     if (!formData.phoneNumber) {
-//       errors.push("Phone number is required");
-//     }
-
-//     if (!formData.password) {
-//       errors.push("Password is required");
-//     }
-
-//     if (!formData.confirmPassword) {
-//       errors.push("Please confirm your password");
-//     }
-
-//     if (formData.password !== formData.confirmPassword) {
-//       errors.push("Passwords do not match");
-//     }
-
-//     if (errors.length > 0) {
-//       setFormErrors(errors);
-//     } else {
-//       setFormErrors([]);
-//       console.log(formData); // do something with form data here
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       {formErrors.length > 0 && (
-//         <div>
-//           {formErrors.map((error) => (
-//             <div key={error}>{error}</div>
-//           ))}
-//         </div>
-//       )}
-//       <div>
-//         <label htmlFor="firstName">First Name</label>
-//         <input
-//           type="text"
-//           id="firstName"
-//           name="firstName"
-//           value={formData.firstName}
-//           onChange={handleInputChange}
-//         />
-//       </div>
-//       <div>
-//         <label htmlFor="lastName">Last Name</label>
-//         <input
-//           type="text"
-//           id="lastName"
-//           name="lastName"
-//           value={formData.lastName}
-//           onChange={handleInputChange}
-//         />
-//       </div>
-//       <div>
-//         <label htmlFor="username">Username</label>
-//         <input
-//           type="text"
-//           id="username"
-//           name="username"
-//           value={formData.username}
-//           onChange={handleInputChange}
-//         />
-//       </div>
-//       <div>
-//         <label htmlFor="email">Email</label>
-//         <input
-//           type="email"
-//           id="email"
-//           name="email"
-//           value={formData.email}
-//           onChange={handleInputChange}
-//         />
-//       </div>
-//       <div>
-//         <label htmlFor="phoneNumber">Phone Number</label>
-//         <input
-//           type="tel"
-//           id="phoneNumber"
-//           name="phoneNumber"
-//           value={formData.phoneNumber}
-//           onChange={handleInputChange}
-//         />
-//       </div>
-//       <div>
-//         <label htmlFor="password">Password</label>
-//         <input
-//           type="password"
-//           id="password"
-//           name="password"
-//           value={formData.password}
-//           onChange={handleInputChange}
-//           />
-//         </div>
-//       <div>
-//         <label htmlFor="confirmPassword">Phone Number</label>
-//         <input
-//           type="password"
-//           id="confirmPassword"
-//           name="confirmPassword"
-//           value={formData.confirmPassword}
-//           onChange={handleInputChange}
-//         />
-//       </div>
-//     </form>)
-// };
 
 export default SignUpForm;

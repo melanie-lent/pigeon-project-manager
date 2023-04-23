@@ -32,6 +32,10 @@ const OwnedProjectList = () => {
         getOwnedProjects();
     }, []);
 
+    const handleProjectCreated = (project) => {
+        setOwnedProjects([...ownedProjects, project]);
+    }
+
     return (
         <div className='project-list-container'>
             <div className='container'>
@@ -39,10 +43,12 @@ const OwnedProjectList = () => {
                     <div class="spinner-container"><Spinner animation="border" variant="light" className="project-list-spinner" /></div>
                 ) :
                     <>
-                        {Object.keys(ownedProjects).map((project) => 
-                                <ProjectItem props={ownedProjects[project]} className='item'/>
+                        {Object.keys(ownedProjects).map((project) =>
+                                ownedProjects[project].id != null ? 
+                                    <ProjectItem props={ownedProjects[project]} className='item'/>
+                                : <></>
                         )}
-                        <CreateProjectButton className='item' />
+                        <CreateProjectButton className='item' onProjectCreated={handleProjectCreated} />
                     </>
                 }
             </div>

@@ -42,6 +42,7 @@ public class AuthenticatedUserService {
 
     public boolean isInProject(UUID projectId, String token) {
         try {
+            System.out.println(projectId + " " + token);
             UUID tokenId = jwtUtils.getIdFromToken(token);
             Project project = projectRepo.findById(projectId).get();
             Set<User> members = project.getMembers();
