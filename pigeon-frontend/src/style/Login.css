@@ -24,7 +24,7 @@
     margin: 0;
 }
 
-.form-row, .subfield {
+.form-row, .subfield, .form-inline {
     margin: auto;
     padding: .5em;
 }
@@ -43,8 +43,12 @@
   margin: auto;
 }
 
+.signup-container input {
+    width: 28em;
+}
+
 .subfield {
-    width: 10em !important;
+    width: 50% !important;
 }
 
 .form-row > input,
@@ -59,7 +63,3 @@
     border-radius: 10px;
     margin-top: .5em !important;
 } */
-
-.firstname-input {
-    margin-left: 8px;
-}

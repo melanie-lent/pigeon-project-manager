@@ -36,7 +36,7 @@ const ProjectDetails = () => {
 
     return (
         <div className='project-info-container'>
-            {isLoadingProjects && <div class="spinner-container"><Spinner animation="border" variant="light" className="project-list-spinner" /></div>}
+            {isLoadingProjects && <div class="spinner-container"><Spinner animation="border" variant="light" className="project-list-spinner .description-spinner" /></div>}
             <div className='project-name-header-container'>
                 <h2 className='project-name-header'>{project.name}</h2>
             </div>

@@ -19,8 +19,6 @@ import IntroPage from './pages/IntroPage.js';
 
 import './style/main.css';
 
-const jwt = localStorage.getItem("jwt");
-
 
 // {user.username ? ( <Route element={<Navigate to="/Home"/>}/>
 // ) : (

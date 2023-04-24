@@ -9,7 +9,7 @@ import {BsXSquareFill} from 'react-icons/bs';
 
 function TaskItem({passedTask, onDelete}) {
     const [task, setTask] = useState(passedTask);
-    const [priorityIcon, setPriorityIcon] = useState("");
+    // const [priorityIcon, setPriorityIcon] = useState("");
     const [completed, setCompleted] = useState(task.isCompleted);
     const [displayedDueDate, setDisplayedDueDate] = useState("");
     const jwt = localStorage.getItem("jwt");
@@ -29,19 +29,6 @@ function TaskItem({passedTask, onDelete}) {
         handleChangeDisplayedDueDate(task.dueDate);
     }, [task]);
 
-    useEffect(() => {
-        var p = 0; 
-        switch(task.priority) {
-            case 0: p = "none";
-            case 1: p = "low";
-            case 2: p = "normal";
-            case 3: p = "high";
-            case 4: p = "urgent";
-            default: p = "urgent";
-        }
-        setPriorityIcon(priorityIcon);
-    })
-
     const handleChangeDisplayedDueDate = (date) => {
         if (date != null && date != "") {
             let dateObj = new Date(Date.parse(date));
@@ -54,6 +41,19 @@ function TaskItem({passedTask, onDelete}) {
             setDisplayedDueDate("");
         }
     }
+
+    const setPriority = () => {
+        switch(task.priority) {
+            case 0: return "priority-none";
+            case 1: return "priority-low";
+            case 2: return "priority-normal";
+            case 3: return "priority-high";
+            case 4: return "priority-urgent";
+            default: return "priority-urgent";
+        }
+    }
+    
+    let priorityClass = setPriority();
 
     const handleUpdateProject = async () => {
         await api.put(`http://127.0.0.1:8080/task`, {
@@ -80,7 +80,7 @@ function TaskItem({passedTask, onDelete}) {
     
     return (
         <>
-            <div className="task-priority-icon-container"><BsExclamationCircleFill className="priority-icon" /></div>
+            <div className="task-priority-icon-container"><BsExclamationCircleFill className={`priority-icon ${priorityClass}`} /></div>
             <div className="task-completed-icon-container">
                 <input type="checkbox" className="task-completed-checkbox" checked={completed} onChange={e => setCompleted(e.target.checked)} />
             </div>

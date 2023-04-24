@@ -4,6 +4,7 @@ import NavBar from '../components/NavBar.js';
 import {useState, useEffect} from 'react';
 import api from '../api/axiosConfig.js';
 import { Navigate } from "react-router-dom";
+import CheckAuth from '../components/auth/CheckAuth.js';
 
 
 
@@ -22,6 +23,7 @@ const Layout = () => {
         <main>
             <NavBar />
             <Outlet />
+            <CheckAuth />
         </main>
     );
 }
