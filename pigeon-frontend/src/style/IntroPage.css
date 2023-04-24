@@ -1,0 +1,48 @@
+p {
+    color: white;
+    text-align: center;
+}
+
+div {
+    display: block;
+}
+
+.intro-header {
+    background-image: linear-gradient(to left bottom, #ffffff, #f4efff, #DBB1F0);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent;
+    height: 75px !important;
+}
+
+.intro-header, .small-header {
+    margin: auto;
+    text-align: center;
+}
+
+.small-header {
+    margin: 1em;
+}
+
+.auth-button-container {
+    text-align: center;
+    padding: 2em;
+}
+
+button {
+    padding: 1em;
+    font-size: 1.5em !important;
+    font-weight: 600;
+    color: white;
+    margin: 0 .5em !important;
+    width: 12em;
+    border-radius: 15pt !important;
+}
+
+.to-signup {
+    background-image: linear-gradient(to right top, #1f766e, #2d857d, #3b948c, #48a39c, #55b3ac);
+    border-color: #1f766e;
+}

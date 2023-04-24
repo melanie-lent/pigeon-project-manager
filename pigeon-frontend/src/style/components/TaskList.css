@@ -1,0 +1,157 @@
+.container {
+    max-width: 100% !important;
+    width: 100%;
+    margin: 0 0 0 0 !important;
+    padding: 10px 0 !important;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.empty-task-list-msg-container {
+    width: fit-content;
+
+}
+
+.task-list-header {
+    text-align: left;
+}
+
+/* .task-name, .task-desc {
+    vertical-align: auto;
+} */
+
+.task-desc, .no-desc {
+    font-size: 12pt;
+    color:rgb(192, 192, 192)
+}
+
+.task-list-header-container {
+    margin: 2% !important;
+}
+
+.empty-project-list-msg {
+    margin: 0;
+}
+
+.task-item {
+    display: inline-block;
+    margin: 10px;
+    border-radius: 15px;
+    border: #7652f8 solid 3px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 29px 0px;
+    padding: 30px 10px 0px 10px;
+    width: 300px;
+    color: white;
+    text-align: center;
+    background-color: #343434;
+    height: 200px !important;
+}
+
+.task-desc-container {
+    max-width: inherit;
+    text-align: center;
+}
+
+.task-item:hover {
+    border-color: #ffe77c;
+} 
+
+.item {    
+    flex-grow: 1;
+}
+.task-desc-container {
+    max-width: 70%;
+    max-height: 50%;
+    margin: auto;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent);
+    position: relative;
+    bottom: 80px;
+}
+
+.spinner-container {
+    margin: 0 0 3em 0;
+}
+.add-task-caption {
+    margin-top: 15%;
+}
+
+.delete-task-button {
+    height: 10px;
+    width: fit-content;
+    margin: 0;
+    background: none !important;
+    padding: 0;
+    font-size: 1.5em !important;
+    border: none;
+    color: #7652f8;
+}
+
+.delete-task-button-container {
+    position: relative;
+    right: 120px;
+    bottom: 25px;
+    height: fit-content;
+}
+
+.task-list-container {
+    width: fit-content;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.7);
+    position: relative;
+    bottom: 35px;
+    right: 120px;
+}
+
+.task-priority-icon-container {
+    position: relative;
+    top: 130px;
+    right: 90px;
+}
+
+.task-name {
+    position: relative;
+    bottom: 80px;
+    font-size: 1.25em;
+}
+
+.priority-none {
+    color: #aaa;
+}
+
+.priority-low {
+    color: #4084dd;
+}
+
+.priority-normal {
+    color: #4eb92a;
+}
+
+.priority-high {
+    color: #e0cd1c;
+}
+
+.priority-urgent {
+    color: #a82e2e;
+}
+
+.priority-icon {
+    position: relative;
+    transform: scale(1.5);
+    bottom: 5px;
+    right: 30px;
+}
+
+.task-duedate {
+    position: relative;
+    bottom: 35px;
+    left: 90px;
+    font-size: 10pt;
+    color: #ddd;
+}

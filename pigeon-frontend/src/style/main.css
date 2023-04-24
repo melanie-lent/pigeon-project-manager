@@ -1,0 +1,25 @@
+html, body {
+    background-color: #333 !important;
+    font-family: 'Calibri';
+    height: 100% !important;
+    background-image: linear-gradient(to top, #000000, #121212, #1d1d1d, #282828, #333333);
+    position: static;
+    background-attachment: fixed;
+}
+
+#root > div {
+    padding: 5em;
+}
+
+button {
+    font-weight: 600;
+    color: white;
+    border-radius: 15pt !important;
+    background-image: linear-gradient(to right top, #3f00b5, #4c0ab1, #5713ad, #601baa, #6723a6);
+    border: 1px solid #3f00b5;
+}
+
+h2 {
+    color: white;
+    font-size: 3.5em !important;
+}

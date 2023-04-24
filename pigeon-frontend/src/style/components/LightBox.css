@@ -1,0 +1,66 @@
+.lightbox {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;  /*optional bg color*/
+    background-color: rgba(0, 0, 0, 0.52);  /*the following isn't necessary but will help center everything once we add buttons*/
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+.dialog {
+    background-color: white;
+    position: inherit;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding: 40px 100px;
+    border-radius: 10px;
+    border: darkgray 1px solid;
+  }
+
+.dialog * {
+    display: block;
+    margin: auto;
+}
+
+.project-submit {
+    background-color: #661277;
+    border: #480555 1px solid;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 10px;
+    margin-top: 1em !important;
+    /* float: right; */
+}
+
+.project-create-form > * {
+    margin: 1.5em auto !important;
+}
+
+.dialog input, textarea {
+    border-radius: 10px;
+    border: darkgray 1px solid;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.dialog p, textarea {
+    margin: .75em !important;
+    color: black !important;
+}
+
+.task-desc-input {
+    margin: 0;
+}
+
+.task-name-input {
+    margin-left: 12px;
+}
+
+.priority-radio input, .priority-radio label {
+    display: inline;
+}
