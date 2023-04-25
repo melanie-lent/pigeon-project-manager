@@ -2,9 +2,9 @@ package com.example.pigeonbackend.controller;
 
 import com.example.pigeonbackend.JwtUtils;
 import com.example.pigeonbackend.datatypes.model.User;
-import com.example.pigeonbackend.datatypes.model.auth.*;
+import com.example.pigeonbackend.datatypes.model.auth.LoginRequest;
+import com.example.pigeonbackend.datatypes.model.auth.UserDetailsImpl;
 import com.example.pigeonbackend.repo.UserRepo;
-import com.example.pigeonbackend.service.AuthenticatedUserService;
 import com.example.pigeonbackend.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://127.0.0.1:3000", maxAge = 1000 * 60 * 60)
@@ -31,6 +29,8 @@ public class AuthController {
     UserService userService;
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    private UserRepo userRepo;
 
     @RequestMapping(method=RequestMethod.POST, value="/login")
     public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -74,7 +74,7 @@ public class AuthController {
 
     @RequestMapping(method=RequestMethod.POST, value="/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
-        if (userService.createUser(user)) return new ResponseEntity<>("Created user successfully", HttpStatus.CREATED);
+        if (userService.createUser(user)) return new ResponseEntity<>(userRepo.findByUsername(user.getUsername()), HttpStatus.CREATED);
         return new ResponseEntity<>("Couldn't create user. Check parameters, user w/ given email and/or username may already exist", HttpStatus.BAD_REQUEST);
     }
 

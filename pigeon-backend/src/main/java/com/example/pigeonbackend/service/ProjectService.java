@@ -11,11 +11,13 @@ import com.example.pigeonbackend.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class ProjectService {
@@ -72,13 +74,13 @@ public class ProjectService {
         }
     }
 
-    @PreAuthorize("@authHelper.idMatches(#project.getOwnerId(), #authToken)")
     public ResponseEntity<String> createProject(Project project, String authToken) {
         // first, check that the user who owns the project exists
         try {
-            UUID ownerId = project.getOwnerId();
+            UUID ownerId = authHelper.getIdFromToken(authToken);
             User owner = userRepo.findById(ownerId).get();
             owner.addToInProjects(project);
+            project.setOwnerId(ownerId);
             project.addToMembers(owner);
 
             projectRepo.save(project);
@@ -122,7 +124,22 @@ public class ProjectService {
             }
             // otherwise, move on to adding the user
             project.addToMembers(addedUser);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(project, HttpStatus.OK);
+        } catch (Exception NoSuchElementException) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PreAuthorize("@authHelper.isOwner(#projectId, #authToken)")
+    public ResponseEntity<String> editPerms(UUID projectId, ProjectMember projectMember, String authToken) {
+        try {
+            Project project = projectRepo.findById(projectId).get();
+            Set<User> members = project.getMembers();
+            User addedUser = userRepo.findById(projectMember.getMemberId()).get();
+            if (members.contains(addedUser)) {
+                projectMemberRepo.save(projectMember);
+            }
+            return new ResponseEntity(projectMember, HttpStatus.OK);
         } catch (Exception NoSuchElementException) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }

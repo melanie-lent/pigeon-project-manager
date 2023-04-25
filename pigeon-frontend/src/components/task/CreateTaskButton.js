@@ -15,6 +15,7 @@ const CreateTaskButton = ({onTaskCreated}) => {
     }
 
     const addTask = (newTask) => {
+        console.log("task added:", newTask);
         setTask(newTask);
     }
 

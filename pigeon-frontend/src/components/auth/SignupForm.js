@@ -14,6 +14,7 @@ const SignUpForm = () => {
   const [lastName, setLastName] = useState("");
 
   const [error, setError] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const storedJwt = localStorage.getItem("jwt");
   const [jwt, setJwt] = useLocalState("", "jwt");
@@ -30,11 +31,22 @@ const SignUpForm = () => {
       if (res.status == 200 || res.data == {}) {
         setJwt(res.headers.get("authorization").replace(/['"]+/g, ''));
         setStoredId(res.data.replace(/['"]+/g, ''));
+        setLoggedIn(true);
       } else {
         setError("Something went wrong while signing in. Please visit the login page and try again with your username and password.");
       }
     });
   }
+
+  const onSuccessfulLogin = () => {
+    navigate("/projectview");
+  }
+
+  useEffect(() => {
+    if (loggedIn) {
+      onSuccessfulLogin();
+    }
+  }, [loggedIn]);
 
   const handleSubmit = async () => {
     if (!username || !password || !confirmPassword || !email || !firstName || !lastName) {

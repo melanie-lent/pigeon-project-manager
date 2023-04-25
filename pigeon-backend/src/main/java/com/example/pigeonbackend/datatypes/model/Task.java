@@ -1,8 +1,6 @@
 package com.example.pigeonbackend.datatypes.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,7 +9,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -47,7 +47,6 @@ public class Task {
     private Set<String> tags = new HashSet<>();
 
     @ManyToMany(mappedBy = "assignedTasks", fetch = FetchType.LAZY)
-    @JsonIgnore
     private Set<User> assignees = new HashSet<>();
 
 //    @ManyToMany(fetch = FetchType.LAZY)

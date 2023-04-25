@@ -64,10 +64,10 @@ function TaskItem({passedTask, onDelete}) {
             description: task.description,
             priority: task.priority,
             dueDate: task.dueDate,
-            lastEdited: new Date,
+            lastEdited: new Date(),
             createdOn: task.createdOn,
             isCompleted: completed
-        },  {
+        },  { 
             headers: {
                 'Authorization': `${jwt}`
             }

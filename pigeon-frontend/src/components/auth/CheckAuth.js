@@ -17,13 +17,12 @@ const CheckAuth = () => {
             if (res.status != 200) {
                 localStorage.removeItem("jwt");
                 localStorage.removeItem("userId");
-                navigate("/");
+                navigate("/projectview");
             }
+            // navigate("/");
         }
     )
     .catch((e) => {
-        localStorage.removeItem("jwt");
-        localStorage.removeItem("userId");
         navigate("/");
       });
   }, []);

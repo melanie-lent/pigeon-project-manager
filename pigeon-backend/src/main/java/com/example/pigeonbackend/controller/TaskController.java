@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:3000", maxAge = 1000 * 60 * 60)
@@ -47,14 +44,13 @@ public class TaskController {
     @RequestMapping(method= RequestMethod.DELETE, value="/task/{id}")
     public ResponseEntity deleteTask(@PathVariable UUID id, HttpServletRequest request) {
         String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-//        System.out.println(authToken);
         return taskService.deleteTask(id, authToken);
     }
 
-//    @RequestMapping(method=RequestMethod.POST, value="/task/search")
-//    public List<Task> getTasksByParams(@RequestBody Task task, HttpServletRequest request) {
-//        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-//        return taskService.getTasksByParams(task, authToken);
-//    }
+    @RequestMapping(method=RequestMethod.POST, value="/task/search/{projectId}")
+    public List<Task> getTasksByParams(@PathVariable UUID projectId, @RequestBody Task task, HttpServletRequest request) {
+        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return taskService.getTasksByParams(projectId, task, authToken);
+    }
 
 }

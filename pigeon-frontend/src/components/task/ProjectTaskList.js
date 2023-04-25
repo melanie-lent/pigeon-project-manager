@@ -76,7 +76,7 @@ const ProjectTaskList = (props) => {
                             </div>
                         ) : (
                             <></>
-                        )}
+                        )} 
                     </>
                 )}
                 {!isLoadingTasks && <CreateTaskButton className='item' onTaskCreated={handleTaskCreated} />}

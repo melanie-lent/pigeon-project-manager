@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -14,46 +14,24 @@
 	<name>pigeon-backend</name>
 	<description>pigeon backend. lets do this</description>
 	<properties>
-<!--		<maven.compiler.source>1.8</maven.compiler.source>-->
-<!--		<maven.compiler.target>1.8</maven.compiler.target>-->
+		<!--		<maven.compiler.source>1.8</maven.compiler.source>-->
+		<!--		<maven.compiler.target>1.8</maven.compiler.target>-->
 		<java.version>17</java.version>
 		<spring-shell.version>3.0.0</spring-shell.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
 	<dependencies>
-<!--		<dependency>-->
-<!--			<groupId>org.hibernate.javax.persistence</groupId>-->
-<!--			<artifactId>hibernate-jpa-2.1-api</artifactId>-->
-<!--			<version>1.0.1.Final</version>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>javax.persistence</groupId>-->
-<!--			<artifactId>javax.persistence-api</artifactId>-->
-<!--			<version>2.2</version>-->
-<!--		</dependency>-->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-rest</artifactId>
-			<version>2.3.0.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<groupId>org.hibernate.common</groupId>
+			<artifactId>hibernate-commons-annotations</artifactId>
+			<version>5.0.4.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.6.2</version>
 		</dependency>
-<!--		<depende-->
+		<!--		<depende-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -172,25 +150,15 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>6.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>3.0-alpha-1</version>
-        </dependency>
-    </dependencies>
+		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
+			<artifactId>spring-orm</artifactId>
 			<version>6.0.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>6.0.4</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>3.0-alpha-1</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
@@ -277,25 +245,25 @@
 				</dependencies>
 			</plugin>
 			<plugin>
-      			<artifactId>maven-resources-plugin</artifactId>
-      			<executions>
-        				<execution>
-          					<id>copy-resources</id>
-          					<phase>validate</phase>
-          				<goals>
-            				<goal>copy-resources</goal>
-          				</goals>
-          				<configuration>
-           					<outputDirectory>${basedir}/target/classes/static/</outputDirectory>
-            				<resources>
-              					<resource>
-                						<directory>${basedir}/../react-crud/build</directory>
-              					</resource>
-            				</resources>
-          				</configuration>
-        			</execution>
-      		</executions>
-    			</plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/static/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../react-crud/build</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

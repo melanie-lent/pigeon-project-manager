@@ -3,19 +3,19 @@ package com.example.pigeonbackend.repo;
 import com.example.pigeonbackend.datatypes.model.Task;
 import com.example.pigeonbackend.datatypes.model.User;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import jakarta.persistence.metamodel.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskSpecifications {
     @Autowired
     private EntityManager em;
 
-    public List<Task> search(Task params) {
+    public List<Task> search(UUID projectId, Task params) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Task> cq = cb.createQuery(Task.class);
         Root<Task> root = cq.from(Task.class);
@@ -23,17 +23,11 @@ public class TaskSpecifications {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (params.getId() != null) {
-            predicates.add(cb.equal(root.get("id"), params.getId()));
-        }
-
         if (params.getCreatedBy() != null) {
             predicates.add(cb.equal(root.get("createdBy"), params.getCreatedBy()));
         }
 
-        if (params.getProjectId() != null) {
-            predicates.add(cb.equal(root.get("projectId"), params.getProjectId()));
-        }
+        predicates.add(cb.equal(root.get("projectId"), projectId));
 
         if (params.getTaskName() != null) {
             predicates.add(cb.like(root.get(type.getDeclaredSingularAttribute("taskName", String.class)), cb.lower(cb.literal("%" + params.getTaskName() + "%"))));

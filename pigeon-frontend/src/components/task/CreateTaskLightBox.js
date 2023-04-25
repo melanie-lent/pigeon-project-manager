@@ -39,6 +39,11 @@ const CreateTaskLightBox = ({onClose, onAddTask}) => {
         if (!taskName) {
           setError("Please give your task a name!");
         } else {
+            if (!taskDueDate) {
+                setTaskDueDate(null);
+            }
+            let createdOn = new Date();
+            console.log(taskPriority);  
           await api.post('http://127.0.0.1:8080/task', {
             taskName: taskName,
             description: taskDesc,
@@ -47,6 +52,7 @@ const CreateTaskLightBox = ({onClose, onAddTask}) => {
             priority: taskPriority,
             dueDate: taskDueDate,
             isCompleted: false,
+            createdOn: createdOn,
             tags: taskTags
           }, {
             headers: {

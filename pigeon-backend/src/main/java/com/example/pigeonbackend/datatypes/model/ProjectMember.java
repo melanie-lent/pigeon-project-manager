@@ -45,6 +45,10 @@ public class ProjectMember {
         return canAssignTask;
     }
 
+    public UUID getMemberId() { return memberId; }
+
+    public UUID getProjectId() { return projectId; }
+
     public Boolean getCanCreateTask() {
         return canCreateTask;
     }

@@ -1,13 +1,10 @@
 package com.example.pigeonbackend.datatypes.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +36,7 @@ public class Project {
 //    @NotFound(action = NotFoundAction.IGNORE)
 
     @ManyToMany(mappedBy = "inProjects", fetch = FetchType.LAZY)
-    @JsonIgnore
+//    @JsonIgnore
     private Set<User> members = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

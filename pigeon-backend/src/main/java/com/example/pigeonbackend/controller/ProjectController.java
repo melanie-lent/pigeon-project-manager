@@ -1,6 +1,7 @@
 package com.example.pigeonbackend.controller;
 
 import com.example.pigeonbackend.datatypes.model.Project;
+import com.example.pigeonbackend.datatypes.model.ProjectMember;
 import com.example.pigeonbackend.datatypes.model.Task;
 import com.example.pigeonbackend.datatypes.model.User;
 import com.example.pigeonbackend.service.ProjectService;
@@ -9,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -45,6 +44,21 @@ public class ProjectController {
     public ResponseEntity updateProject(@RequestBody Project project, HttpServletRequest request) {
         String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         return projectService.updateProject(project, authToken);
+    }
+    @RequestMapping(method=RequestMethod.PUT, value="/project/addmember")
+    public ResponseEntity addMember(@RequestParam UUID projectId, @RequestParam UUID memberId, HttpServletRequest request) {
+        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return projectService.addMember(projectId, memberId, authToken);
+    }
+    @RequestMapping(method=RequestMethod.PUT, value="/project/removemember")
+    public ResponseEntity removeMember(@RequestParam UUID projectId, @RequestParam UUID memberId, HttpServletRequest request) {
+        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return projectService.removeMember(projectId, memberId, authToken);
+    }
+    @RequestMapping(method=RequestMethod.PUT, value="/project/editperms")
+    public ResponseEntity editPerms(@RequestParam UUID projectId, @RequestBody ProjectMember projectMember, HttpServletRequest request) {
+        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return projectService.editPerms(projectId, projectMember, authToken);
     }
     @RequestMapping(method= RequestMethod.DELETE, value="/project/{id}")
     public ResponseEntity deleteProject(@PathVariable UUID id, HttpServletRequest request) {

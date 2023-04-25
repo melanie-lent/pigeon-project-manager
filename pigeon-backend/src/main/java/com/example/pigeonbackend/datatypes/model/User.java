@@ -1,22 +1,20 @@
 package com.example.pigeonbackend.datatypes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.nimbusds.jose.shaded.gson.Gson;
-import com.nimbusds.jose.shaded.gson.GsonBuilder;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.*;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -29,6 +27,7 @@ public class User {
     private UUID id;
 //    @JsonIgnore
     @Column
+    @JsonIgnore
     private String password;
     private String email;
     private String username;
@@ -52,7 +51,7 @@ public class User {
 //    )
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("inProjects")
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JoinTable(
@@ -64,7 +63,7 @@ public class User {
     private Set<Project> inProjects;
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("assignedTasks")
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JoinTable(

@@ -1,13 +1,14 @@
 package com.example.pigeonbackend.service;
 
-import com.example.pigeonbackend.datatypes.model.Project;
 import com.example.pigeonbackend.datatypes.model.Task;
 import com.example.pigeonbackend.datatypes.model.User;
-import com.example.pigeonbackend.repo.*;
+import com.example.pigeonbackend.repo.ProjectRepo;
+import com.example.pigeonbackend.repo.TaskRepo;
+import com.example.pigeonbackend.repo.TaskSpecifications;
+import com.example.pigeonbackend.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -189,13 +190,14 @@ public class TaskService {
     }
 
     // search for tasks in the db that share attributes with the passed-in task
-//    public List<Task> getTasksByParams(Task task, String authToken) {
-//        try {
-//            return ts.search(task);
-//        } catch (Exception NoSuchElementException) {
-//            return new ArrayList<>();
-//        }
-//    }
+    @PreAuthorize("@authHelper.isInProject(#projectId, #authToken)")
+    public List<Task> getTasksByParams(UUID projectId, Task task, String authToken) {
+        try {
+            return ts.search(projectId, task);
+        } catch (Exception NoSuchElementException) {
+            return new ArrayList<>();
+        }
+    }
 
     public Set<User> getAssignees(Task task, String authToken) {
         return task.getAssignees();
