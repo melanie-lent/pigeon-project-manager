@@ -23,11 +23,11 @@ public class TaskSpecifications {
 
         List<Predicate> predicates = new ArrayList<>();
 
+        predicates.add(cb.equal(root.get("projectId"), projectId));
+
         if (params.getCreatedBy() != null) {
             predicates.add(cb.equal(root.get("createdBy"), params.getCreatedBy()));
         }
-
-        predicates.add(cb.equal(root.get("projectId"), projectId));
 
         if (params.getTaskName() != null) {
             predicates.add(cb.like(root.get(type.getDeclaredSingularAttribute("taskName", String.class)), cb.lower(cb.literal("%" + params.getTaskName() + "%"))));
@@ -45,16 +45,17 @@ public class TaskSpecifications {
             predicates.add(cb.equal(root.get("dueDate"), params.getDueDate()));
         }
 
-        if (params.getLastEdited() != null) {
-            predicates.add(cb.equal(root.get("lastEdited"), params.getLastEdited()));
-        }
-
         if (params.getCreatedOn() != null) {
             predicates.add(cb.equal(root.get("createdOn"), params.getCreatedOn()));
         }
 
+        if (params.getIsCompleted() != null) {
+            predicates.add(cb.equal(root.get("isCompleted"), params.getIsCompleted()));
+        }
+
 //        if (params.getTags() != null) {
-//            predicates.add(cb.in(root.get("tags"), params.getTags());
+//            Expression<List<String>> tags = root.get("tags");
+//            predicates.add(cb.isMember());
 //        }
 //
 //        if (params.getAssignees() != null) {

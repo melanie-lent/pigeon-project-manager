@@ -53,4 +53,14 @@ public class TaskController {
         return taskService.getTasksByParams(projectId, task, authToken);
     }
 
+    @RequestMapping(method=RequestMethod.PUT, value="/task/addassignee")
+    public ResponseEntity<Object> addAssignee(@RequestParam UUID taskId, @RequestParam UUID userId, HttpServletRequest request) {
+        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return taskService.addAssignee(taskId, userId, authToken);
+    }
+    @RequestMapping(method=RequestMethod.PUT, value="/task/removeassignee")
+    public ResponseEntity<Object> removeAssignee(@RequestParam UUID taskId, @RequestParam UUID userId, HttpServletRequest request) {
+        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return taskService.removeAssignee(taskId, userId, authToken);
+    }
 }

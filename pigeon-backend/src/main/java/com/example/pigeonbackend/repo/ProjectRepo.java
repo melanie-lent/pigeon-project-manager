@@ -18,6 +18,6 @@ public interface ProjectRepo extends JpaRepository<Project, UUID> {
      Set<Project> findByNameContainingIgnoreCase(String name);
      Set<Project> findAllByOwnerId(UUID uuid);
      List<Project> findAll();
-     @Query(value = "SELECT * FROM PROJECTS UNION PROJECT_MEMBERS ON PROJECT.ID=PROJECT_MEMBERS.PROJECT_ID WHERE OWNER_ID != ?1", nativeQuery = true)
+     @Query(value = "SELECT * FROM project_data.projects projects JOIN project_data.project_members project_members ON (projects.id=project_members.project_id) WHERE (owner_id != ?1 AND ?1 IN (select project_data.project_members.member_id from project_data.project_members))", nativeQuery = true)
      Set<Project> getProjectsByMemberNotOwner(UUID id);
 }

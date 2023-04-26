@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -13,7 +17,7 @@ import java.util.UUID;
 @Table(name="assignees", schema="project_data")
 public class Assignee {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+
     @Column
     private UUID assigneeId;
     @Column

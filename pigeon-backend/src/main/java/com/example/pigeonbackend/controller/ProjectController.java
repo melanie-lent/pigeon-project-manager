@@ -46,9 +46,9 @@ public class ProjectController {
         return projectService.updateProject(project, authToken);
     }
     @RequestMapping(method=RequestMethod.PUT, value="/project/addmember")
-    public ResponseEntity addMember(@RequestParam UUID projectId, @RequestParam UUID memberId, HttpServletRequest request) {
+    public ResponseEntity addMember(@RequestParam UUID projectId, @RequestBody ProjectMember projectMember, HttpServletRequest request) {
         String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        return projectService.addMember(projectId, memberId, authToken);
+        return projectService.addMember(projectId, projectMember, authToken);
     }
     @RequestMapping(method=RequestMethod.PUT, value="/project/removemember")
     public ResponseEntity removeMember(@RequestParam UUID projectId, @RequestParam UUID memberId, HttpServletRequest request) {

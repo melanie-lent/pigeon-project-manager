@@ -1,5 +1,6 @@
 package com.example.pigeonbackend.repo;
 
+import com.example.pigeonbackend.datatypes.model.Assignee;
 import com.example.pigeonbackend.datatypes.model.ProjectMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
@@ -10,7 +11,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ProjectMemberRepo extends JpaRepository<ProjectMember, UUID> {
-    public ProjectMember findByMemberIdAndProjectId(UUID memberId, UUID projectId);
-    public ProjectMember findByMemberId(UUID memberId);
+public interface AssigneeRepo extends JpaRepository<Assignee, UUID> {
 }

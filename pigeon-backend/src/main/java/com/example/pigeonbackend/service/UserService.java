@@ -36,8 +36,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private ProjectRepo projectRepo;
 
-    // todo: next step is to do actual authentication on /login and /signup
-
     public Boolean createUser(User user) {
         if (userRepo.existsByUsername(user.getUsername())) {
             return false;

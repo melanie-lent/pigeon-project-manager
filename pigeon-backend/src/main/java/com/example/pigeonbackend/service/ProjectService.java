@@ -21,9 +21,6 @@ import java.util.UUID;
 
 @Service
 public class ProjectService {
-
-    // todo: users must exist for a project with a user as its creator in order to exist. deletions cascade.
-    //todo: see if you can make the combination of project name and owner id have to be unique. ask russ
     @Autowired
     private ProjectRepo projectRepo;
     @Autowired
@@ -112,18 +109,19 @@ public class ProjectService {
     }
 
     @PreAuthorize("@authHelper.isOwner(#projectId, #authToken)")
-    public ResponseEntity<String> addMember(UUID projectId, UUID userId, String authToken) {
+    public ResponseEntity<String> addMember(UUID projectId, ProjectMember projectMember, String authToken) {
         // check that project exists
         try {
             Project project = projectRepo.findById(projectId).get();
             Set<User> members = project.getMembers();
-            User addedUser = userRepo.findById(userId).get();
+            User addedUser = userRepo.findById(projectMember.getMemberId()).get();
             // if the added user is already in the project, just return
             if (members.contains(addedUser)) {
-                return new ResponseEntity(HttpStatus.OK);
+                return new ResponseEntity(project, HttpStatus.OK);
             }
             // otherwise, move on to adding the user
             project.addToMembers(addedUser);
+            projectMemberRepo.save(projectMember);
             return new ResponseEntity(project, HttpStatus.OK);
         } catch (Exception NoSuchElementException) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);

@@ -1,11 +1,9 @@
 package com.example.pigeonbackend.service;
 
+import com.example.pigeonbackend.datatypes.model.Assignee;
 import com.example.pigeonbackend.datatypes.model.Task;
 import com.example.pigeonbackend.datatypes.model.User;
-import com.example.pigeonbackend.repo.ProjectRepo;
-import com.example.pigeonbackend.repo.TaskRepo;
-import com.example.pigeonbackend.repo.TaskSpecifications;
-import com.example.pigeonbackend.repo.UserRepo;
+import com.example.pigeonbackend.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +20,8 @@ public class TaskService {
     private ProjectRepo projectRepo;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private AssigneeRepo assigneeRepo;
     @Autowired
     private TaskSpecifications ts;
     @Autowired
@@ -101,36 +101,34 @@ public class TaskService {
 
     @PreAuthorize("@authHelper.sufficientPerms(@authHelper.getProjectFromTaskId(#taskId).getId(), #authToken, \"canAssignTask\")")
 //    @PreAuthorize("projectRepo.findById(task.getProjectId()).members(contains(authHelper.getPrincipalId())) && ProjectMemberRepo.findByProjectIdAndMemberId(task.getProjectId(), user.getId()).getCanAssignTask()")
-    public ResponseEntity<Object> addAssignee(UUID userId, UUID taskId, String authToken) {
+    public ResponseEntity<Object> addAssignee(UUID taskId, UUID userId, String authToken) {
         try {
             Task task = taskRepo.findById(taskId).get();
-            User assignee = userRepo.findById(userId).get();
+            User user = userRepo.findById(userId).get();
             Set<User> assignees = task.getAssignees();
-            if (assignees.contains(assignee)) return new ResponseEntity<Object>(HttpStatus.OK);
-            assignees.add(assignee);
+            if (assignees.contains(user)) return new ResponseEntity<Object>(task, HttpStatus.OK);
+            assignees.add(user);
             task.setAssignees(assignees);
             taskRepo.save(task);
-            return new ResponseEntity<Object>("User added to task assignees", HttpStatus.OK);
+            Assignee assigneeObject = new Assignee(userId, taskId);
+            assigneeRepo.save(assigneeObject);
+            return new ResponseEntity<Object>(task, HttpStatus.OK);
         } catch (Exception NoSuchElementException) {
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PreAuthorize("@authHelper.sufficientPerms(#task.getProjectId(), #authToken, \"canAssignTask\")")
-    public ResponseEntity<Object> removeAssignee(User user, Task task, String authToken) {
+    public ResponseEntity<Object> removeAssignee(UUID taskId, UUID userId, String authToken) {
         try {
-//            if (!userRepo.existsById(user.getId())) {
-//                return new ResponseEntity<Object>("User does not exist", HttpStatus.BAD_REQUEST);
-//            }
-//            if (!userIsInProject(user.getId(), task.getProjectId())) {
-//                return new ResponseEntity<Object>("User is not in given task's project", HttpStatus.BAD_REQUEST);
-//            }
+            Task task = taskRepo.findById(taskId).get();
+            User assignee = userRepo.findById(userId).get();
             Set<User> assignees = task.getAssignees();
-            if (!assignees.contains(user)) return new ResponseEntity<Object>(HttpStatus.OK);
-            assignees.remove(user);
+            if (!assignees.contains(assignee)) return new ResponseEntity<Object>(HttpStatus.OK);
+            assignees.remove(assignee);
             task.setAssignees(assignees);
             taskRepo.save(task);
-            return new ResponseEntity<Object>("User removed from task assignees", HttpStatus.OK);
+            return new ResponseEntity<Object>(task, HttpStatus.OK);
         } catch (Exception NoSuchElementException) {
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }

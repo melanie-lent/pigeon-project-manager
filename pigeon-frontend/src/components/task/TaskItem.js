@@ -49,7 +49,7 @@ function TaskItem({passedTask, onDelete}) {
             case 2: return "priority-normal";
             case 3: return "priority-high";
             case 4: return "priority-urgent";
-            default: return "priority-urgent";
+            default: return "priority-none";
         }
     }
     

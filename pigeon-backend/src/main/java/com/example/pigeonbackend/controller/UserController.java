@@ -24,8 +24,6 @@ public class UserController {
     @Autowired
     private UserService userService = new UserService();
 
-    // TODO: 2/14/2023 comment out "getall" type functions for production
-
 //    @GetMapping("/user/all")
 //    public Set<User> getAllUsers() {
 //        return userService.getAllUsers();
@@ -52,11 +50,11 @@ public class UserController {
         return userService.getProjectsByOwner(id, authToken);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="/user/memberprojects/{id}")
-    public Set<Project> getProjectsByMemberNotOwner(@PathVariable UUID id, HttpServletRequest request) {
-        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        return userService.getProjectsByMemberNotOwner(id, authToken);
-    }
+//    @RequestMapping(method = RequestMethod.GET, value="/user/memberprojects/{id}")
+//    public Set<Project> getProjectsByMemberNotOwner(@PathVariable UUID id, HttpServletRequest request) {
+//        String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+//        return userService.getProjectsByMemberNotOwner(id, authToken);
+//    }
     @RequestMapping(method = RequestMethod.GET, value="/user/assignedtasks/{id}")
     public Set<Task> getTasksByUser(@PathVariable UUID id, HttpServletRequest request) {
         String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
